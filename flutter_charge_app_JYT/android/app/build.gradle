@@ -1,0 +1,120 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    namespace "com.gopro.chargestation"
+    compileSdkVersion flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    defaultConfig {
+        applicationId "com.gopro.chargestation"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        minSdkVersion 21
+        targetSdkVersion flutter.targetSdkVersion
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+    }
+    //签名
+    signingConfigs {
+        config {
+            storeFile file('../charge_station.jks')
+            keyAlias 'gopro_charge_station'
+            keyPassword 'gopro123456'
+            storePassword 'gopro123456'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.config
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/lib_release.kotlin_module'
+        exclude 'META-INF/core.kotlin_module'
+        //GlideTransform
+        exclude 'lib/*/libRSSupport.so'
+        exclude 'lib/*/librsjni.so'
+        exclude 'lib/*/librsjni_androidx.so'
+        //Poi
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        jniLibs {
+            useLegacyPackaging true
+        }
+    }
+    android.applicationVariants.all { variant ->
+        variant.assembleProvider.configure {
+            def outputFileDir = "${project.rootDir.absolutePath}/apk/"
+            delete fileTree(outputFileDir)
+            it.doLast {
+                variant.outputs.forEach { file ->
+                    if (file.outputFileName.contains("debug")) {
+                        return
+                    }
+                    def outputApkName = file.outputFileName.replace('app', "光莆充电桩-v${variant.versionName}")
+                    //println("${file.outputFileName}")
+                    copy {
+                        from file.outputFile
+                        into "${outputFileDir}"
+                        rename { srcFileName ->
+                            "${outputFileDir}${outputApkName}"
+                        }
+                    }
+                    println("${outputFileDir}${outputApkName}")
+                }
+            }
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+
+}
