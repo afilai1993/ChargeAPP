@@ -64,14 +64,14 @@ class _BluetoothWriter {
 
           try {
             await characteristic.write(
-                // DeviceTransferData(
-                //         transferMethod: DeviceTransferMethod.master,
-                //         unique: item.request.unique,
-                //         currentLength: body.values.length,
-                //         remainLength: 0,
-                //         body: body)
-                //     .result,
-                Int8List.fromList(body.values),
+                DeviceTransferData(
+                        transferMethod: DeviceTransferMethod.master,
+                        unique: item.request.unique,
+                        currentLength: body.values.length,
+                        remainLength: 0,
+                        body: body)
+                    .result,
+                // Int8List.fromList(body.values),
 
                 withoutResponse: true);
             final completer = _completerMap.remove(serial);

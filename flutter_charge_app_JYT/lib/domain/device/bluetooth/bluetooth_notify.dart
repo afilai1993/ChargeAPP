@@ -24,7 +24,8 @@ class _BluetoothNotify {
   void _listen() {
     _subscription = characteristic.onValueReceived.listen((event) {
       try {
-        final data = DeviceTransferData.parse(event);
+        // final data = DeviceTransferData.parse(event);
+        final data = String.fromCharCodes(event);
         _provider.value = data;
         _logger.debug("解析:$data");
       } catch (e, st) {

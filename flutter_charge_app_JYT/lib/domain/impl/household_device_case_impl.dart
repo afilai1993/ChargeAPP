@@ -339,6 +339,10 @@ class _HouseholdDeviceCaseImpl implements HouseholdDeviceCase {
       return;
     }
     await UserDatabase.instance.userBindChargeDeviceDao.delete(userId, address);
+    final device = HardwareChargeDeviceManager.instance.find(address);
+    if (device.isConnected) {
+      device.disconnect().catchError((e) {});
+    }
     serviceEventBus.post(HardwareChargeEvent(
         operateType: DataOperateType.delete,
         chargePO: ChargeDevicePO()..id = userBinder.deviceId));

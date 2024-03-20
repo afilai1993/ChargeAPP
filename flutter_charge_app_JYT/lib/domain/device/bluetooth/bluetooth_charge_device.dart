@@ -23,14 +23,22 @@ part 'bluetooth_request_manager.dart';
 
 class BluetoothChargeDevice implements HardwareChargeDevice {
   final BluetoothDevice device;
+  // static final serviceId =
+  //     Guid.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+  //
+  // static final _writeCharacteristicId =
+  //     Guid.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+  //
+  // static final _notifyCharacteristicId =
+  //     Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
   static final serviceId =
-      Guid.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+  Guid.fromString("0000a002-0000-1000-8000-00805f9b34fb");
 
   static final _writeCharacteristicId =
-      Guid.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+  Guid.fromString("0000c303-0000-1000-8000-00805f9b34fb");
 
   static final _notifyCharacteristicId =
-      Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+  Guid.fromString("0000c305-0000-1000-8000-00805f9b34fb");
   _BluetoothWriter? _writer;
   _BluetoothNotify? _notify;
   _BluetoothRequestManager? _requestManager;
@@ -230,6 +238,9 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
   @override
   Stream<HouseholdChargeDeviceConnectState> get watchConnectState =>
       connectStateProvider.stream;
+
+
+
 
   @override
   Future triggerMessage(TriggerMessageType messageType) async {

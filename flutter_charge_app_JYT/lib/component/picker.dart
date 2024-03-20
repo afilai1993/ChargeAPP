@@ -84,6 +84,7 @@ class CustomSinglePicker extends StatelessWidget {
           listWidth: double.infinity,
           enableAnimation: false,
           horizontal: false,
+          isVibrate: false,
           totalCount: children.length,
           initValue: selectedIndex,
           isInfinite: false,

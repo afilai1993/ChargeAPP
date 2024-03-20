@@ -235,7 +235,7 @@ class _TimerItem extends StatelessWidget {
             style: textStyle,
           ),
           Text(
-            "${S.current.end_time}:${formatTime(item.endTime)}",
+            "${S.current.end_time}:${formatTime(item.endTime, isNextDay: (item.endTime != null && item.startTime != null && item.endTime!.inSeconds < item.startTime!.inSeconds))}",
             style: textStyle,
           )
         ],
@@ -257,10 +257,18 @@ class _TimerItem extends StatelessWidget {
     }
   }
 
-  String formatTime(Duration? time) {
-    return time == null
-        ? "-"
-        : "${(time.inHours % 24).toString().padLeft(2, "0")}:${(time.inMinutes % 60).toString().padLeft(2, "0")}:${(time.inSeconds % 60).toString().padLeft(2, "0")}";
+  String formatTime(Duration? time, {bool isNextDay = false}) {
+    if (time == null) {
+      return "-";
+    }
+    final String timeText =
+        "${(time.inHours % 24).toString().padLeft(2, "0")}:${(time.inMinutes % 60).toString().padLeft(2, "0")}:${(time.inSeconds % 60).toString().padLeft(2, "0")}";
+
+    if (isNextDay) {
+      return "${S.current.next_day} $timeText";
+    }
+
+    return timeText;
   }
 }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:typed_data';
 
 extension DeviceTransferStringExtension on String {
@@ -42,7 +43,7 @@ extension TransferIntListExtension on List<int> {
 enum DeviceTransferIdentify {
   start("\n", 10),
   close('\r', 13),
-  dataClose('#', 35);
+  dataClose('', 0);
 
   final String key;
   final int value;
@@ -98,55 +99,62 @@ class DeviceTransferData {
   }
 
   List<int> get result {
-    final length = _startIdentitySize +
-        transferMethod.data.length +
-        DeviceTransferUnique.length +
-        _remainLengthSize +
-        _currentLengthSize +
-        body.values.length +
-        _checkCodeSize +
-        _endIdentitySize;
+    // final length = _startIdentitySize +
+    //     transferMethod.data.length +
+    //     DeviceTransferUnique.length +
+    //     _remainLengthSize +
+    //     _currentLengthSize +
+    //     body.values.length +
+    //     _checkCodeSize +
+    //     _endIdentitySize;
+    // final result = Uint8List(length);
+    // var pos = 0;
+    // //开始符
+    // result[0] = DeviceTransferIdentify.start.value;
+    // pos++;
+    // //传输方式
+    // for (var item in transferMethod.data) {
+    //   result[pos++] = item;
+    // }
+    // // uniqueId
+    // unique.updateByteArray(result, pos);
+    // pos += DeviceTransferUnique.length;
+    // // 剩余发送长度
+    // result.downUpdateInt(pos, remainLength, _remainLengthSize);
+    // pos += _remainLengthSize;
+    // // 当前发送长度
+    // result.downUpdateInt(pos, currentLength, _currentLengthSize);
+    // pos += _currentLengthSize;
+    // // 内容
+    // for (var item in body.values) {
+    //   result[pos++] = item;
+    // }
+    // //校验码
+    // final checkFromIndex = _startIdentitySize + transferMethod.value.length;
+    // final checkEndIndex = checkFromIndex +
+    //     DeviceTransferUnique.length +
+    //     _remainLengthSize +
+    //     _currentLengthSize +
+    //     body.values.length -
+    //     1;
+    // var check1 = result[checkFromIndex];
+    // var check2 = result[checkFromIndex];
+    // for (var index = checkFromIndex + 1; index <= checkEndIndex; index++) {
+    //   check1 = check1 ^ result[index];
+    //   check2 += (result[index] & 0x00ff);
+    // }
+    // result[pos] = check1;
+    // result[pos + 1] = check2;
+    // pos += _checkCodeSize;
+    // //结束符
+    // result[pos] = DeviceTransferIdentify.close.value;
+    final length = body.values.length;
     final result = Uint8List(length);
     var pos = 0;
-    //开始符
-    result[0] = DeviceTransferIdentify.start.value;
-    pos++;
-    //传输方式
-    for (var item in transferMethod.data) {
-      result[pos++] = item;
-    }
-    // uniqueId
-    unique.updateByteArray(result, pos);
-    pos += DeviceTransferUnique.length;
-    // 剩余发送长度
-    result.downUpdateInt(pos, remainLength, _remainLengthSize);
-    pos += _remainLengthSize;
-    // 当前发送长度
-    result.downUpdateInt(pos, currentLength, _currentLengthSize);
-    pos += _currentLengthSize;
     // 内容
     for (var item in body.values) {
       result[pos++] = item;
     }
-    //校验码
-    final checkFromIndex = _startIdentitySize + transferMethod.value.length;
-    final checkEndIndex = checkFromIndex +
-        DeviceTransferUnique.length +
-        _remainLengthSize +
-        _currentLengthSize +
-        body.values.length -
-        1;
-    var check1 = result[checkFromIndex];
-    var check2 = result[checkFromIndex];
-    for (var index = checkFromIndex + 1; index <= checkEndIndex; index++) {
-      check1 = check1 ^ result[index];
-      check2 += (result[index] & 0x00ff);
-    }
-    result[pos] = check1;
-    result[pos + 1] = check2;
-    pos += _checkCodeSize;
-    //结束符
-    result[pos] = DeviceTransferIdentify.close.value;
     return Int8List.fromList(result);
   }
 
@@ -372,13 +380,21 @@ class DeviceTransferJsonBody {
     required this.uniqueId,
   });
 
+  // List<int> get result => ("${jsonEncode({
+  //           "messageTypeId": messageType?.value,
+  //           "uniqueId": uniqueId,
+  //           "action": action,
+  //           "payload": payload
+  //         })}${DeviceTransferIdentify.dataClose.key}")
+  //         .deviceByteArray;
   List<int> get result => ("${jsonEncode({
-            "messageTypeId": messageType?.value,
-            "uniqueId": uniqueId,
-            "action": action,
-            "payload": payload
-          })}${DeviceTransferIdentify.dataClose.key}")
-          .deviceByteArray;
+    "messageTypeId": messageType?.value,
+    "uniqueId": uniqueId,
+    "action": action,
+    "payload": payload
+  })}${DeviceTransferIdentify.dataClose.key}")
+      .deviceByteArray;
+
 
   DeviceTransferBody toDeviceTransferBody() {
     return DeviceTransferBody(result);

@@ -83,6 +83,7 @@ abstract class HardwareChargeDevice {
 
   Future triggerMessage(TriggerMessageType messageType);
 
+
   Future<bool> authCharge(
       {required int connectorId, required bool isCharge, required int current});
 

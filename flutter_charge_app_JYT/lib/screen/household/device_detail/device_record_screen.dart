@@ -66,6 +66,7 @@ class _DeviceRecordScreenState extends State<_DeviceRecordScreen>
                   value: dateFormat.format(startDate),
                   onClick: () {
                     pickTime(
+                        title: S.current.start_date,
                         initialDate: startDate,
                         firstDate: maxStartDate,
                         lastDate: endDate,
@@ -88,6 +89,7 @@ class _DeviceRecordScreenState extends State<_DeviceRecordScreen>
                   value: dateFormat.format(endDate),
                   onClick: () {
                     pickTime(
+                        title: S.current.end_date,
                         initialDate: endDate,
                         firstDate: startDate,
                         lastDate: maxEndDate,
@@ -132,13 +134,15 @@ class _DeviceRecordScreenState extends State<_DeviceRecordScreen>
   bool get wantKeepAlive => true;
 
   void pickTime(
-      {required DateTime initialDate,
+      {required String title,
+      required DateTime initialDate,
       required DateTime firstDate,
       required DateTime lastDate,
       required Function(DateTime dateTime) onConfirm}) async {
     final result = await showDialog<DateTime?>(
         context: context,
         builder: (dialogContext) => DatePickerDialog(
+              helpText: title,
               firstDate: firstDate,
               lastDate: lastDate,
               initialDate: initialDate,

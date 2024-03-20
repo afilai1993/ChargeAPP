@@ -209,5 +209,7 @@
   "setting_locale_en": "English",
   "tip_open_bluetooth": "please open bluetooth",
   "tip_open_location_bluetooth": "Please enable location services for nearby Bluetooth searching.",
-  "total_electric_energy": "Total electric energy"
+  "total_electric_energy": "Total electric energy",
+  "about_app": "About {appName}",
+  "version": "Version"
 }
