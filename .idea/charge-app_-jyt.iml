@@ -81,8 +81,12 @@
       <excludeFolder url="file://$MODULE_DIR$/flutter_charge_app_JYT/ios/.symlinks/plugins/wifi_iot/example/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/flutter_charge_app_JYT/ios/.symlinks/plugins/wifi_iot/example/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/flutter_charge_app_JYT/ios/.symlinks/plugins/wifi_iot/example/build" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_charge_app_JYT/module/gplogger/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_charge_app_JYT/module/gplogger/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/flutter_charge_app_JYT/module/gplogger/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
   </component>
 </module>
