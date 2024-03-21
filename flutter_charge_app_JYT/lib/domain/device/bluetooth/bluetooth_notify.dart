@@ -37,15 +37,17 @@ static List<int> ReceiveData=[];
             _logger.debug("解析:$data");
           } catch (e, st) {
             _logger.warn("解析失败;$ReceiveData", e, st);
+            final String stringData=String.fromCharCodes(ReceiveData);
+            _logger.debug("解析失败:$stringData");
           }
           ReceiveData=[];
         }
         else if(ReceiveData.length>512)
          {
-           _logger.debug("ReceiveData解析失败:$ReceiveData");
+           _logger.debug("数据长度超出最大值:$ReceiveData");
 
-           final String StringData=String.fromCharCodes(ReceiveData);
-           _logger.debug("ReceiveData解析失败:$StringData");
+           final String stringData=String.fromCharCodes(ReceiveData);
+           _logger.debug("数据长度超出最大值:$stringData");
            ReceiveData=[];
          }
 
