@@ -28,10 +28,17 @@ static List<int> ReceiveData=[];
       EndAddr=event.indexOf(0x23);
       if(EndAddr >= 0)//判断是否有#号结尾
         {
-        List<int> JsonData=[];
-        JsonData=ReceiveData;
+        String jsonData="";
+        jsonData=String.fromCharCodes(ReceiveData);
           try {
-            final data = DeviceTransferData.parse(ReceiveData);
+            jsonData=jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
+            jsonData=jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
+            jsonData=jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
+            jsonData=jsonData.replaceAll("\"evseType\":\"NA\"", "\"evseType\":\"-\"");
+            List<int> jsonDataList=[];
+            jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+
+            final data = DeviceTransferData.parse(jsonDataList);
             // final data = String.fromCharCodes(event);
             _provider.value = data;
             _logger.debug("解析:$data");
