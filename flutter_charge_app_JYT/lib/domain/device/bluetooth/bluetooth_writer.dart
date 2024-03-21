@@ -74,6 +74,8 @@ class _BluetoothWriter {
                 // Int8List.fromList(body.values),
 
                 withoutResponse: true);
+            final String sendData=String.fromCharCodes(body.values);
+            _logger.debug("发送数据给充电桩:$sendData");
             Future.delayed(const Duration(seconds: 1));
             final body1=[0x23];
 
