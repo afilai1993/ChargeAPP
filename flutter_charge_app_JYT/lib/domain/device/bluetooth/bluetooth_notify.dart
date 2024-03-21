@@ -20,17 +20,35 @@ class _BluetoothNotify {
   }
 
   Stream<Object?> get stream => _provider.createStream(currentGet: false);
-
+static List<int> ReceiveData=[];
   void _listen() {
     _subscription = characteristic.onValueReceived.listen((event) {
-      try {
-        // final data = DeviceTransferData.parse(event);
-        final data = String.fromCharCodes(event);
-        _provider.value = data;
-        _logger.debug("解析:$data");
-      } catch (e, st) {
-        _logger.warn("解析失败;$event", e, st);
-      }
+      ReceiveData+=event;
+      var EndAddr=0;
+      EndAddr=event.indexOf(0x23);
+      if(EndAddr >= 0)//判断是否有#号结尾
+        {
+        List<int> JsonData=[];
+        JsonData=ReceiveData;
+          try {
+            final data = DeviceTransferData.parse(ReceiveData);
+            // final data = String.fromCharCodes(event);
+            _provider.value = data;
+            _logger.debug("解析:$data");
+          } catch (e, st) {
+            _logger.warn("解析失败;$ReceiveData", e, st);
+          }
+          ReceiveData=[];
+        }
+        else if(ReceiveData.length>512)
+         {
+           _logger.debug("ReceiveData解析失败:$ReceiveData");
+
+           final String StringData=String.fromCharCodes(ReceiveData);
+           _logger.debug("ReceiveData解析失败:$StringData");
+           ReceiveData=[];
+         }
+
     });
   }
 }

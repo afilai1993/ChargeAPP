@@ -74,6 +74,12 @@ class _BluetoothWriter {
                 // Int8List.fromList(body.values),
 
                 withoutResponse: true);
+            Future.delayed(const Duration(seconds: 1));
+            final body1=[0x23];
+
+            await characteristic.write(
+                Int8List.fromList(body1),
+                withoutResponse: true);
             final completer = _completerMap.remove(serial);
             if (completer != null && !completer.completer.isCompleted) {
               completer.completer.complete();

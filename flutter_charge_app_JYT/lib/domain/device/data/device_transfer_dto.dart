@@ -74,28 +74,37 @@ class DeviceTransferData {
 
   factory DeviceTransferData.parse(List<int> dataList) {
     final uint8List = Uint8List.fromList(dataList);
-    final DeviceTransferMethod method = DeviceTransferMethod.find(uint8List, 1);
+    // final DeviceTransferMethod method = DeviceTransferMethod.find(uint8List, 1);
 
+    // return DeviceTransferData(
+    //     transferMethod: method,
+    //     unique: DeviceTransferUnique.parse(
+    //         uint8List, _startIdentitySize + method.size),
+    //     remainLength: uint8List._toInt(
+    //         _startIdentitySize + method.size + DeviceTransferUnique.length,
+    //         _remainLengthSize),
+    //     currentLength: uint8List._toInt(
+    //         _startIdentitySize +
+    //             method.size +
+    //             DeviceTransferUnique.length +
+    //             _remainLengthSize,
+    //         _currentLengthSize),
+    //     body: DeviceTransferBody(uint8List.copyRange(
+    //         _startIdentitySize +
+    //             method.size +
+    //             DeviceTransferUnique.length +
+    //             _remainLengthSize +
+    //             _currentLengthSize,
+    //         uint8List.length - _endIdentitySize - _checkCodeSize)));
     return DeviceTransferData(
-        transferMethod: method,
+        transferMethod: DeviceTransferMethod.slave,
         unique: DeviceTransferUnique.parse(
-            uint8List, _startIdentitySize + method.size),
-        remainLength: uint8List._toInt(
-            _startIdentitySize + method.size + DeviceTransferUnique.length,
-            _remainLengthSize),
-        currentLength: uint8List._toInt(
-            _startIdentitySize +
-                method.size +
-                DeviceTransferUnique.length +
-                _remainLengthSize,
-            _currentLengthSize),
+            Uint8List.fromList([0x00,0x01,0x1d,0x04,0x05,0x06]),0),
+        remainLength: 0,
+        currentLength: dataList.length,
         body: DeviceTransferBody(uint8List.copyRange(
-            _startIdentitySize +
-                method.size +
-                DeviceTransferUnique.length +
-                _remainLengthSize +
-                _currentLengthSize,
-            uint8List.length - _endIdentitySize - _checkCodeSize)));
+            0,
+            dataList.length)));
   }
 
   List<int> get result {
