@@ -28,25 +28,41 @@ static List<int> ReceiveData=[];
       EndAddr=event.indexOf(0x23);
       if(EndAddr >= 0)//判断是否有#号结尾
         {
-        String jsonData="";
-        jsonData=String.fromCharCodes(ReceiveData);
-          try {
-            jsonData=jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
-            jsonData=jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
-            jsonData=jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
-            jsonData=jsonData.replaceAll("\"evseType\":\"NA\"", "\"evseType\":\"-\"");
-            List<int> jsonDataList=[];
-            jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+          if(ReceiveData[0]==123)
+            {
+              String jsonData="";
+              jsonData=String.fromCharCodes(ReceiveData);
+              try {
+                if(jsonData.contains(",\"chargingTime\":\""))
+                  {
+                    jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"21.9"}}#');
+                  }
+                jsonData=jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
+                jsonData=jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
+                jsonData=jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
+                jsonData=jsonData.replaceAll("\"evseType\":\"NA\"", "\"evseType\":\"-\"");
+                jsonData=jsonData.replaceAll("\"result\":true,\"items\":7}}", "\"result\":true}}");
+                List<int> jsonDataList=[];
+                jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
 
-            final data = DeviceTransferData.parse(jsonDataList);
-            // final data = String.fromCharCodes(event);
-            _provider.value = data;
-            _logger.debug("解析:$data");
-          } catch (e, st) {
-            _logger.warn("解析失败;$ReceiveData", e, st);
-            final String stringData=String.fromCharCodes(ReceiveData);
-            _logger.debug("解析失败:$stringData");
-          }
+                final data = DeviceTransferData.parse(jsonDataList);
+                // final data = String.fromCharCodes(event);
+                _provider.value = data;
+                _logger.debug("解析:$data");
+              } catch (e, st) {
+                _logger.warn("解析失败;$ReceiveData", e, st);
+                final String stringData=String.fromCharCodes(ReceiveData);
+                _logger.debug("解析失败:$stringData");
+              }
+            }
+          else
+            {
+              _logger.debug("数据开头格式不对:$ReceiveData");
+              final String stringData=String.fromCharCodes(ReceiveData);
+              _logger.debug("数据开头格式不对:$stringData");
+              ReceiveData=[];
+            }
+
           ReceiveData=[];
         }
         else if(ReceiveData.length>512)

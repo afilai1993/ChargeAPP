@@ -74,14 +74,49 @@ class _BluetoothWriter {
                 // Int8List.fromList(body.values),
 
                 withoutResponse: true);
-            final String sendData=String.fromCharCodes(body.values);
-            _logger.debug("发送数据给充电桩:$sendData");
+
             Future.delayed(const Duration(seconds: 1));
             final body1=[0x23];
 
             await characteristic.write(
                 Int8List.fromList(body1),
                 withoutResponse: true);
+            final String sendData=String.fromCharCodes(body.values+body1);
+            _logger.debug("发送数据给充电桩:$sendData");
+            if(sendData.contains('SynchroInfo'))
+            {
+              String uid="";
+              String chargeBoxSN="";
+              uid=(item.request.unique.value&0x000000ffffff).toString();
+              final json = const Utf8Decoder().convert(body.values, 0, body.values.length - 1);
+              final jsonObject = jsonDecode(json);
+              chargeBoxSN=jsonObject['chargeBoxSN'];
+              String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","status":"accept"}}#';
+              String jsonData2='{"messageTypeId":"5","uniqueId":"16777215","action":"SynchroInfo","payload":{"chargeBoxSN":"$chargeBoxSN","connectorMain":{"connectionStatus":true,"chargeStatus":"wait","statusCode":0,"startTime":"-","endTime":"-","voltage":"220","current":"0.00","power":"0","electricWork":"0.00000","chargingTime":"0:0:0"},"Temperature1":"37.0","Temperature2":"21.9"}}#';
+              try {
+                List<int> jsonDataList1=[];
+                jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
+
+                final data = DeviceTransferData.parse(jsonDataList1);
+
+                _logger.debug("模拟回复SynchroInfo解析:$data");
+              } catch (e, st) {
+                _logger.warn("模拟回复SynchroInfo解析失败;$jsonData1", e, st);
+
+              }
+              try {
+                List<int> jsonDataList2=[];
+                jsonDataList2=Uint8List.fromList(jsonData2.deviceByteArray);
+
+                final data = DeviceTransferData.parse(jsonDataList2);
+
+                _logger.debug("模拟回复SynchroInfo解析:$data");
+              } catch (e, st) {
+                _logger.warn("模拟回复SynchroInfo解析失败;$jsonData2", e, st);
+
+              }
+
+            }
             final completer = _completerMap.remove(serial);
             if (completer != null && !completer.completer.isCompleted) {
               completer.completer.complete();
