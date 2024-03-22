@@ -111,7 +111,7 @@ class _BluetoothWriter {
 
                     withoutResponse: true);
 
-                sleep(const Duration(milliseconds: 500));
+                sleep(const Duration(milliseconds: 200));
                 await characteristic.write(
                     Int8List.fromList(body1),
                     withoutResponse: true);

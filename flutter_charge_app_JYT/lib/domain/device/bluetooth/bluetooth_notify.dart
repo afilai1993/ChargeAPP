@@ -38,6 +38,8 @@ static List<int> ReceiveData=[];
                     jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"21.9"}}#');
                   }
                 jsonData=jsonData.replaceAll("AT+CWJAP?", "");
+                jsonData=jsonData.replaceAll("\",\"recordType\":\"charge\",\"recordDetails\":{\"chargeId\":", "\",\"recordType\":\"Charge\",\"recordDetails\":{\"chargeId\":");
+                jsonData=jsonData.replaceAll(",\"duration\":0,\"energy\":\"0.00\",\"stopreason\":\"local\",\"errorCode\":0}}}", ',"endTime":"2024-03-21T09:04:08Z","energy":"0.00000","prices":"0USD","stopReason":"app"}}}');
                 jsonData=jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
                 jsonData=jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
                 jsonData=jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
