@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:chargestation/domain/device/charge_device.dart';
