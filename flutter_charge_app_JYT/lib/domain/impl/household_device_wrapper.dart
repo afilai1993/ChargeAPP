@@ -9,8 +9,11 @@ class _WrapperBluetoothDevice {
   int? id;
   final syncInfoProvider = ValueStreamProvider<GPChargeSynchroInfo?>(null);
   final synchroDataProvider = ValueStreamProvider<GPChargeSynchroData?>(null);
+  // final dateFormatTimeZone = DateFormat(
+  //   "yyyy-MM-dd'T'HH:mm:ss'Z'",
+  // );
   final dateFormatTimeZone = DateFormat(
-    "yyyy-MM-dd'T'HH:mm:ss'Z'",
+    "yyyy-MM-dd",
   );
   late final _DeviceScheduleTask syncScheduleTask;
   BluetoothDiagnosisReader? _diagnosisReader;

@@ -43,7 +43,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
   _BluetoothNotify? _notify;
   _BluetoothRequestManager? _requestManager;
   String? sn;
-  String? userId;
+  String? userId='1';
   static const int _noResponseSerial = 1;
   int _serial = _noResponseSerial;
   final connectStateProvider =
@@ -373,7 +373,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
           "chargeBoxSN": sn,
           "userId": userId,
           "recordType": recordType,
-          "startAddress": startAddress,
+          // "startAddress": startAddress,
           if (startTime != null) "startTime": startTime,
           if (endTime != null) "endTime": endTime
         }));
