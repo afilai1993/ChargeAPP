@@ -37,6 +37,7 @@ static List<int> ReceiveData=[];
                   {
                     jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"21.9"}}#');
                   }
+                jsonData=jsonData.replaceAll("AT+CWJAP?", "");
                 jsonData=jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
                 jsonData=jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
                 jsonData=jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
