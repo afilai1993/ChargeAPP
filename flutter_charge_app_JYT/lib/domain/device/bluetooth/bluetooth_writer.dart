@@ -41,6 +41,47 @@ class _BluetoothWriter {
     return completer.completer.future;
   }
 
+
+  Future<void> sendHeartBeat() async
+  {
+    // {"messageTypeId":"6","uniqueId":"7","payload":{"chargeBoxSN":"11222"}}#
+    while(true)
+      {
+        final completerList = List.of(_completerMap.values);
+        int serial;
+        for (var item in completerList) {
+          serial = item.request.unique.serial;
+          if (!_completerMap.containsKey(serial)) {
+            continue;
+          }
+          // final body = DeviceTransferJsonBody(
+          //     messageType: ChargeMessageType.req,
+          //     uniqueId: (item.request.unique.value&0x000000ffffff).toString(),
+          //     action: item.request.action,
+          //     payload: item.request.payload)
+          //     .toDeviceTransferBody();
+          String uid=(item.request.unique.value&0x000000ffffff).toString();
+          String chargeBoxSN="";
+          //{chargeBoxSN: 2100102310200220, userId: , requestedMessage: SynchroInfo}
+          String payLoad="";
+          payLoad=item.request.payload.toString().replaceAll("{chargeBoxSN: ", "").replaceAll(", userId: , requestedMessage: SynchroInfo}", "");
+
+          chargeBoxSN=payLoad;
+          String body='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+          await characteristic.write(
+              Int8List.fromList(body.deviceByteArray),
+              withoutResponse: true);
+          sleep(const Duration(milliseconds: 200));
+          await characteristic.write(
+              Int8List.fromList([0x23]),
+              withoutResponse: true);
+          sleep(const Duration(milliseconds: 500));
+          _logger.debug("发送数据给充电桩:$body");
+        }
+
+      }
+    // return Future.value();
+  }
   void _run() {
     final runFuture = _runFuture;
     if (runFuture != null) {
@@ -95,6 +136,8 @@ class _BluetoothWriter {
               } catch (e, st) {
                 _logger.warn("模拟回复SynchroInfo解析失败;$jsonData2", e, st);
               }
+              sleep(const Duration(milliseconds: 500));
+              await sendHeartBeat();
 
             }
             else
