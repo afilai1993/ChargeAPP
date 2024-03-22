@@ -84,7 +84,9 @@ class _WrapperBluetoothDevice {
         return;
       }
       await device.triggerMessage(TriggerMessageType.synchroInfo);
+      sleep(const Duration(milliseconds: 1000));
       await device.triggerMessage(TriggerMessageType.deviceData);
+      sleep(const Duration(milliseconds: 1000));
       if (_lastSyncRecordTime == null ||
           DateTime.now().millisecondsSinceEpoch -
                   _lastSyncRecordTime!.millisecondsSinceEpoch >
@@ -179,7 +181,9 @@ class _DeviceScheduleTask {
         (await UserDatabase.instance.chargeTimerDao.getMaxVersion(address) ??
                 0) +
             1;
+    sleep(const Duration(milliseconds: 1000));
     await device.triggerMessage(TriggerMessageType.synchroSchedule);
+    sleep(const Duration(milliseconds: 1000));
   }
 
   Future onReceive(DeviceTransferJsonBody data) async {

@@ -65,24 +65,7 @@ class _BluetoothWriter {
           final String sendData=String.fromCharCodes(body.values+body1);
 
           try {
-            await characteristic.write(
-                DeviceTransferData(
-                        transferMethod: DeviceTransferMethod.master,
-                        unique: item.request.unique,
-                        currentLength: body.values.length,
-                        remainLength: 0,
-                        body: body)
-                    .result,
-                // Int8List.fromList(body.values),
 
-                withoutResponse: true);
-
-            Future.delayed(const Duration(seconds: 1));
-
-
-            await characteristic.write(
-                Int8List.fromList(body1),
-                withoutResponse: true);
 //{"messageTypeId":"5","uniqueId":"4781506590","action":"GetRecord","payload":{"chargeBoxSN":"A23-16","userId":"","recordType":"charge","startAddress":null,"startTime":"2024-03-05T15:41:00Z","endTime":"2024-03-07T09:04:12Z"}}#
 //{"messageTypeId":"5","uniqueId":"1711088067494","action":"GetRecord","payload":{"userId":"1","chargeBoxSN":"2100102310200220","recordType":"charge","startTime":"2024-03-01","endTime":"2024-03-31"}}
             _logger.debug("发送数据给充电桩:$sendData");
@@ -114,6 +97,27 @@ class _BluetoothWriter {
               }
 
             }
+            else
+              {
+                await characteristic.write(
+                    DeviceTransferData(
+                        transferMethod: DeviceTransferMethod.master,
+                        unique: item.request.unique,
+                        currentLength: body.values.length,
+                        remainLength: 0,
+                        body: body)
+                        .result,
+                    // Int8List.fromList(body.values),
+
+                    withoutResponse: true);
+
+                sleep(const Duration(milliseconds: 500));
+                await characteristic.write(
+                    Int8List.fromList(body1),
+                    withoutResponse: true);
+                sleep(const Duration(milliseconds: 500));
+
+              }
             final completer = _completerMap.remove(serial);
             if (completer != null && !completer.completer.isCompleted) {
               completer.completer.complete();
