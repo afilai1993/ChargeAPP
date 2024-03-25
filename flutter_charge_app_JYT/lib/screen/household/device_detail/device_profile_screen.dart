@@ -136,6 +136,7 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
             chargeStatus == "wait" ||
             chargeStatus == "finish") &&
         synchroStatus?.connectorMain?.connectionStatus == true) {
+
       uiTask
           .options(UITaskOption(loadingRef: chargeLoading))
           .run(findCase<HouseholdDeviceCase>()

@@ -15,6 +15,9 @@ class _BluetoothRequestManager {
   _BluetoothRequestManager(this.writer);
 
   Future<DeviceTransferData> request(_BluetoothRequest request) {
+
+
+
     final serial = request.unique.serial;
     final call = _DeviceTransferCall(Completer(), request);
     callManager[serial] = call;
