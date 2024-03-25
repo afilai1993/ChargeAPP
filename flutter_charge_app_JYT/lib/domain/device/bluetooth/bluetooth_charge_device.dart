@@ -288,7 +288,8 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
       required int current}) async {
     String chargeBoxSN = "2100102310200220";
     String uid="123456";
-    String body = '{"messageTypeId":"5","uniqueId":"1711088173813","action":"Authorize","payload":{"userId":"1","chargeBoxSN":"2100102310200220","purpose":"Start","current":32,"connectorId":1}}';
+    String startOrStop=isCharge?"Start":"Stop";
+    String body = '{"messageTypeId":"5","uniqueId":"$uid","action":"Authorize","payload":{"userId":"1","chargeBoxSN":"$chargeBoxSN","purpose":"$startOrStop","current":32,"connectorId":1}}';
     // print(body);
     _writer?.sendMessage(body);
     // await _BluetoothWriter.sendMessage(body);
