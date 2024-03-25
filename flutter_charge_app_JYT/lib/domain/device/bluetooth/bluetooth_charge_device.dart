@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:chargestation/domain/device/charge_device.dart';
 import 'package:chargestation/infrastructure/glogger.dart';
 import 'package:chargestation/infrastructure/utils/iterables.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 import '../ValueStreamProvider.dart';
