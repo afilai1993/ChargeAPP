@@ -24,6 +24,54 @@ class _RequestCompleter {
   _RequestCompleter(this.request) : completer = Completer();
 }
 
+
+
+void sendHeartBeatTask(String taskName) async{
+
+  // {"messageTypeId":"6","uniqueId":"7","payload":{"chargeBoxSN":"11222"}}#
+  int serial = 10;
+  String uid = (serial & 0x000000ffffff).toString();
+  String chargeBoxSN = "2100102310200220";
+  String body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+
+  // _BluetoothWriter? ble;
+  while (true) {
+    // final completerList = List.of(_completerMap.values);
+    //
+    // for (var item in completerList) {
+    //   // serial = item.request.unique.serial;
+    //   // if (!_completerMap.containsKey(serial)) {
+    //   //   continue;
+    //   // }
+    //   serial++;
+    //   // String uid=(item.request.unique.value&0x000000ffffff).toString();
+    //   uid=(serial&0x000000ffffff).toString();
+    //   chargeBoxSN="2100102310200220";
+    //   //{chargeBoxSN: 2100102310200220, userId: , requestedMessage: SynchroInfo}
+    //   String payLoad="";
+    //   payLoad=item.request.payload.toString().replaceAll("{chargeBoxSN: ", "").replaceAll(", userId: , requestedMessage: SynchroInfo}", "");
+    //   chargeBoxSN=payLoad;
+    //   String body='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+    //   await sendMessage(body);
+    //   sleep(const Duration(seconds: 1));
+    // }
+    if (kDebugMode) {
+      print("Starting $taskName");
+    }
+    serial++;
+    uid = (serial & 0x000000ffffff).toString();
+    chargeBoxSN = "2100102310200220";
+    body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+    // ble!.sendMessage(body);
+    sleep(const Duration(seconds: 1));
+
+  }
+}
+
+
+
+
+
 class _BluetoothWriter {
   final BluetoothCharacteristic characteristic;
   final Map<int, _RequestCompleter> _completerMap = {};
@@ -41,48 +89,6 @@ class _BluetoothWriter {
     return completer.completer.future;
   }
 
-
-
-  void sendHeartBeatTask(String taskName) async{
-    if (kDebugMode) {
-      print("Starting $taskName");
-    }
-    // {"messageTypeId":"6","uniqueId":"7","payload":{"chargeBoxSN":"11222"}}#
-    int serial = 10;
-    String uid = (serial & 0x000000ffffff).toString();
-    String chargeBoxSN = "2100102310200220";
-    String body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-    while (true) {
-      final completerList = List.of(_completerMap.values);
-
-      for (var item in completerList) {
-        // serial = item.request.unique.serial;
-        // if (!_completerMap.containsKey(serial)) {
-        //   continue;
-        // }
-        serial++;
-        // String uid=(item.request.unique.value&0x000000ffffff).toString();
-        uid=(serial&0x000000ffffff).toString();
-        chargeBoxSN="2100102310200220";
-        //{chargeBoxSN: 2100102310200220, userId: , requestedMessage: SynchroInfo}
-        String payLoad="";
-        payLoad=item.request.payload.toString().replaceAll("{chargeBoxSN: ", "").replaceAll(", userId: , requestedMessage: SynchroInfo}", "");
-        chargeBoxSN=payLoad;
-        String body='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-        await sendMessage(body);
-        sleep(const Duration(seconds: 1));
-      }
-      // serial++;
-      // uid = (serial & 0x000000ffffff).toString();
-      // chargeBoxSN = "2100102310200220";
-      // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-      // await sendMessage(body);
-      // sleep(const Duration(seconds: 1));
-
-    }
-  }
-
-
   Future<void> sendMessage(String data)
   async {
     await characteristic.write(
@@ -97,6 +103,8 @@ class _BluetoothWriter {
     sleep(const Duration(seconds: 1));
 
   }
+
+
 
   void _run() {
     final runFuture = _runFuture;
