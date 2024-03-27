@@ -12,7 +12,7 @@ final GlobalKey<NavigatorState> navigatorKey =
     GlobalKey<NavigatorState>(); //全局上下文
 
 class RouterManager {
-  final RouteTable routeTable = RouteTable();
+  final RouteTable routeTable =  RouteTable();
 
   List<Route<dynamic>> onGenerateInitialRoutes(String initialRoute) {
     final settings = RouteSettings(name: initialRoute);

@@ -112,7 +112,7 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 12),
+              padding: const EdgeInsets.only(left: 12),//数据总览标签
               child: Text(S.current.data_profile),
             ),
             profileWidget(context)
@@ -176,7 +176,7 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
           _DataProfileItem(
             label: "${S.current.total_electric_energy}(kW·h)",
             value: synchroData?.connectorMain?.electricWork ?? "-",
-            width: largeSize,
+            width: largeSize,//总电量设置
             height: largeSize,
             colors: blueColors,
             icon: Align(
@@ -197,7 +197,7 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
           Column(
             children: [
               _SmallDataProfileItem(
-                value: synchroData?.connectorMain?.current ?? "-",
+                value: synchroData?.connectorMain?.current ?? "-",//电流显示部件
                 label: S.current.profile_current,
                 width: smallSize,
                 height: smallSize - 12,
@@ -221,7 +221,7 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
           Column(
             children: [
               _SmallDataProfileItem(
-                value: synchroData?.connectorMain?.voltage ?? "-",
+                value: synchroData?.connectorMain?.voltage ?? "-",//电压显示部件
                 label: S.current.profile_voltage,
                 width: smallSize,
                 height: smallSize - 12,
@@ -268,7 +268,7 @@ class _Battery extends StatelessWidget {
         children: [
           Lottie.asset('public/rotate.json',
               animate: isCharge, width: size, height: size),
-          Container(
+          Container(//旋转图标内的阴影部分
             width: size / 2,
             height: size / 2,
             decoration: BoxDecoration(
@@ -286,7 +286,7 @@ class _Battery extends StatelessWidget {
                   )
                 ]),
           ),
-          Container(
+          Container(//充电电池图标
             margin: const EdgeInsets.only(bottom: 20),
             child: Lottie.asset(
               'public/data.lottie',
@@ -296,7 +296,7 @@ class _Battery extends StatelessWidget {
               decoder: customDecoder,
             ),
           ),
-          Container(
+          Container(//充电状态提示文本
               margin: const EdgeInsets.only(top: 60),
               child: Text(chargeStatueText))
         ],
@@ -342,7 +342,7 @@ class _ChargeSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const size = 100.0;
+    const size = 100.0;//充电按钮开关
     return isLoading
         ? const GPLoadingWidget(
             size: size,
@@ -395,7 +395,7 @@ class _SmallDataProfileItem extends StatelessWidget {
         top: height - 26,
         left: width - 26,
         child: Container(
-          height: 30,
+          height: 30,//充电部件右下角图标
           width: 30,
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -435,7 +435,7 @@ class _DataProfileItem extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(5),//部件渐变色
           gradient: LinearGradient(
               //渐变位置
               begin: Alignment.topLeft, //右上
@@ -447,7 +447,7 @@ class _DataProfileItem extends StatelessWidget {
         children: [
           Positioned(
               child: Container(
-            margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+            margin: const EdgeInsets.fromLTRB(8, 8, 0, 0),//参数部件文字位置
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

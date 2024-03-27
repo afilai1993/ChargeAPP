@@ -75,15 +75,13 @@ class _BluetoothWriter {
   }
 
 
-  static void sendHeartBeatTask(TaskParams params) async{
-    String taskName=params.taskName;
-    BluetoothCharacteristic characteristic=params.characteristic;
-    // {"messageTypeId":"6","uniqueId":"7","payload":{"chargeBoxSN":"11222"}}#
-    int serial = 10;
-    String uid = (serial & 0x000000ffffff).toString();
+  static int serialHeartBeat = 10;
+  static void _sendHeartBeatTask(SendPort send) async{
+
+    String uid = (serialHeartBeat & 0x000000ffffff).toString();
     String chargeBoxSN = "2100102310200220";
     String body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-
+    // BluetoothDevice(remoteId: characteristic.remoteId).connect(autoConnect: true, mtu: 512);
     while (true) {
       // final completerList = List.of(_completerMap.values);
       //
@@ -105,49 +103,20 @@ class _BluetoothWriter {
       //   sleep(const Duration(seconds: 1));
       // }
 
-      serial++;
-      uid = (serial & 0x000000ffffff).toString();
-      chargeBoxSN = "2100102310200220";
-      body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-      // // sendMessage(body);
-      // characteristic.write(
-      //     Int8List.fromList(body.deviceByteArray),
-      //     withoutResponse: true);
-      // sleep(const Duration(milliseconds: 200));
-      // characteristic.write(
-      //     Int8List.fromList([0x23]),
-      //     withoutResponse: true);
-      if (kDebugMode) {
-        print("Starting $taskName");
-        print("发送数据给充电桩:$body#");
-      }
-
-
-      sleep(const Duration(seconds: 2));
-
-    }
-  }
-  static int serialHeartBeat = 10;
-  static void _sendHeartBeatTask(SendPort send) async{
-
-    String uid = (serialHeartBeat & 0x000000ffffff).toString();
-    String chargeBoxSN = "2100102310200220";
-    String body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-    // BluetoothDevice(remoteId: characteristic.remoteId).connect(autoConnect: true, mtu: 512);
-    while (true) {
-      serialHeartBeat++;
-      uid = (serialHeartBeat & 0x000000ffffff).toString();
-      chargeBoxSN = "2100102310200220";
-      body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
       try
       {
+        serialHeartBeat++;
+        uid = (serialHeartBeat & 0x000000ffffff).toString();
+        chargeBoxSN = "2100102310200220";
+        body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
         send.send(body);
+        sleep(const Duration(seconds: 2));
       }
        catch(e)
        {
          print(e);
        }
-      sleep(const Duration(seconds: 2));
+
     }
   }
 
@@ -180,7 +149,7 @@ class _BluetoothWriter {
 //{"messageTypeId":"5","uniqueId":"4781506590","action":"GetRecord","payload":{"chargeBoxSN":"A23-16","userId":"","recordType":"charge","startAddress":null,"startTime":"2024-03-05T15:41:00Z","endTime":"2024-03-07T09:04:12Z"}}#
 //{"messageTypeId":"5","uniqueId":"1711088067494","action":"GetRecord","payload":{"userId":"1","chargeBoxSN":"2100102310200220","recordType":"charge","startTime":"2024-03-01","endTime":"2024-03-31"}}
             _logger.debug("发送数据给充电桩:$sendData");
-            if(sendData.contains('SynchroInfo'))
+            if(sendData.contains('SynchroInfo'))//佳茵特充电桩没有SynchroInfo功能
             {
               String uid="";
               String chargeBoxSN="";
@@ -189,7 +158,7 @@ class _BluetoothWriter {
               final jsonObject = jsonDecode(json);
               chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
               String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","status":"accept"}}#';
-              String jsonData2='{"messageTypeId":"5","uniqueId":"16777215","action":"SynchroInfo","payload":{"chargeBoxSN":"$chargeBoxSN","connectorMain":{"connectionStatus":true,"chargeStatus":"wait","statusCode":0,"startTime":"-","endTime":"-","voltage":"220","current":"0.00","power":"0","electricWork":"0.00000","chargingTime":"0:0:0"},"Temperature1":"37.0","Temperature2":"21.9"}}#';
+              String jsonData2='{"messageTypeId":"5","uniqueId":"16777215","action":"SynchroInfo","payload":{"chargeBoxSN":"$chargeBoxSN","connectorMain":{"connectionStatus":true,"chargeStatus":"idle","statusCode":0,"startTime":"-","endTime":"-","voltage":"220","current":"0.00","power":"0","electricWork":"0.00000","chargingTime":"0:0:0"},"Temperature1":"37.0","Temperature2":"37.0"}}#';
               try {
                 List<int> jsonDataList1=[];
                 jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
@@ -207,34 +176,66 @@ class _BluetoothWriter {
                 _logger.warn("模拟回复SynchroInfo解析失败;$jsonData2", e, st);
               }
               sleep(const Duration(milliseconds: 500));
-              ReceivePort portHeartBeat = ReceivePort();
-              // Isolate.spawn(_sendHeartBeatTask, portHeartBeat.sendPort);
-              compute(_sendHeartBeatTask, portHeartBeat.sendPort);
-              portHeartBeat.listen((message) async{
-                try
-                {
-                  await characteristic.write(
-                      Int8List.fromList(message.toString().deviceByteArray),
-                      withoutResponse: true);
-                  sleep(const Duration(milliseconds: 200));
-                  await characteristic.write(
-                      Int8List.fromList([0x23]),
-                      withoutResponse: true);
-                  // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-                  _logger.debug("Starting listenTask");
-                  _logger.debug("listen发送数据给充电桩:$message#");
-                  // sleep(const Duration(seconds: 1));
-                }
-                catch(e)
-                {
-                  print("characteristicUuid:${characteristic.characteristicUuid}");
-                  print("uuid:${characteristic.uuid}");
-                  print("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
-                  print("serviceUuid:${characteristic.serviceUuid}");
-                  print("remoteId:${characteristic.remoteId}");
-                  print(e);
-                }
+              // 创建一个重复执行的定时任务，每隔1秒执行一次
+              String message="";
+              Timer.periodic(Duration(seconds: 1), (timer) async{
+                print('重复执行的定时任务！');
+                  try
+                  {
+                    serialHeartBeat++;
+                    uid = (serialHeartBeat & 0x000000ffffff).toString();
+                    chargeBoxSN = "2100102310200220";
+                    message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                    await characteristic.write(
+                        Int8List.fromList(message.toString().deviceByteArray),
+                        withoutResponse: true);
+                    sleep(const Duration(milliseconds: 200));
+                    await characteristic.write(
+                        Int8List.fromList([0x23]),
+                        withoutResponse: true);
+                    // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                    _logger.debug("定时任务执行中");
+                    _logger.debug("定时发送数据给充电桩:$message#");
+                    // sleep(const Duration(seconds: 1));
+                  }
+                  catch(e)
+                  {
+                    print("characteristicUuid:${characteristic.characteristicUuid}");
+                    print("uuid:${characteristic.uuid}");
+                    print("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
+                    print("serviceUuid:${characteristic.serviceUuid}");
+                    print("remoteId:${characteristic.remoteId}");
+                    print(e);
+                  }
               });
+              // ReceivePort portHeartBeat = ReceivePort();
+              // Isolate isolate = await Isolate.spawn(_sendHeartBeatTask, portHeartBeat.sendPort);
+              // // compute(_sendHeartBeatTask, portHeartBeat.sendPort);
+              // portHeartBeat.listen((message) async{
+              //   try
+              //   {
+              //     await characteristic.write(
+              //         Int8List.fromList(message.toString().deviceByteArray),
+              //         withoutResponse: true);
+              //     sleep(const Duration(milliseconds: 200));
+              //     await characteristic.write(
+              //         Int8List.fromList([0x23]),
+              //         withoutResponse: true);
+              //     // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+              //     _logger.debug("Starting listenTask");
+              //     _logger.debug("listen发送数据给充电桩:$message#");
+              //     // sleep(const Duration(seconds: 1));
+              //   }
+              //   catch(e)
+              //   {
+              //     print("characteristicUuid:${characteristic.characteristicUuid}");
+              //     print("uuid:${characteristic.uuid}");
+              //     print("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
+              //     print("serviceUuid:${characteristic.serviceUuid}");
+              //     print("remoteId:${characteristic.remoteId}");
+              //     print(e);
+              //   }
+              // });
 
             }
             else
