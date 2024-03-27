@@ -178,7 +178,7 @@ class _BluetoothWriter {
               sleep(const Duration(milliseconds: 500));
               // 创建一个重复执行的定时任务，每隔1秒执行一次
               String message="";
-              Timer.periodic(Duration(seconds: 1), (timer) async{
+              Timer.periodic(Duration(seconds: 2), (timer) async{
                 print('重复执行的定时任务！');
                   try
                   {
@@ -189,7 +189,8 @@ class _BluetoothWriter {
                     await characteristic.write(
                         Int8List.fromList(message.toString().deviceByteArray),
                         withoutResponse: true);
-                    sleep(const Duration(milliseconds: 200));
+                    // sleep(const Duration(milliseconds: 200));
+                    Future.delayed(const Duration(milliseconds: 200));
                     await characteristic.write(
                         Int8List.fromList([0x23]),
                         withoutResponse: true);
