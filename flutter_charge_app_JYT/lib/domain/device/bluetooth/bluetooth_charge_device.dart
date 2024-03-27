@@ -122,8 +122,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
     try {
       await device.connect(timeout: const Duration(seconds: 10));
     } catch (e) {
-      connectStateProvider.value = HouseholdChargeDeviceConnectState.idle;
-      throw DeviceConnectException(ConnectErrorType.unknown, e: e);
+      connectStateProvider.value = HouseholdChargeDeviceConnectState.idle;throw DeviceConnectException(ConnectErrorType.unknown, e: e);
     }
     connectStateProvider.value = HouseholdChargeDeviceConnectState.ensureKey;
     _BluetoothWriter? writer;
