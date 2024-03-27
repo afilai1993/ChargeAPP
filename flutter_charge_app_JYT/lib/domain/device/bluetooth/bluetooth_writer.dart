@@ -74,7 +74,7 @@ class _BluetoothWriter {
 
   }
 
-
+  static int timeTaskEn=0;
   static int serialHeartBeat = 10;
   static void _sendHeartBeatTask(SendPort send) async{
 
@@ -178,37 +178,43 @@ class _BluetoothWriter {
               sleep(const Duration(milliseconds: 500));
               // 创建一个重复执行的定时任务，每隔1秒执行一次
               String message="";
-              Timer.periodic(Duration(seconds: 2), (timer) async{
-                print('重复执行的定时任务！');
-                  try
-                  {
-                    serialHeartBeat++;
-                    uid = (serialHeartBeat & 0x000000ffffff).toString();
-                    chargeBoxSN = "2100102310200220";
-                    message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-                    await characteristic.write(
-                        Int8List.fromList(message.toString().deviceByteArray),
-                        withoutResponse: true);
-                    // sleep(const Duration(milliseconds: 200));
-                    Future.delayed(const Duration(milliseconds: 200));
-                    await characteristic.write(
-                        Int8List.fromList([0x23]),
-                        withoutResponse: true);
-                    // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-                    _logger.debug("定时任务执行中");
-                    _logger.debug("定时发送数据给充电桩:$message#");
-                    // sleep(const Duration(seconds: 1));
-                  }
-                  catch(e)
-                  {
-                    print("characteristicUuid:${characteristic.characteristicUuid}");
-                    print("uuid:${characteristic.uuid}");
-                    print("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
-                    print("serviceUuid:${characteristic.serviceUuid}");
-                    print("remoteId:${characteristic.remoteId}");
-                    print(e);
-                  }
-              });
+
+              if(timeTaskEn==0)
+                {
+                  Timer timer = Timer.periodic(Duration(seconds: 2), (timer) async{
+                    print('重复执行的定时任务！');
+                    try
+                    {
+                      serialHeartBeat++;
+                      uid = (serialHeartBeat & 0x000000ffffff).toString();
+                      chargeBoxSN = "2100102310200220";
+                      message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                      await characteristic.write(
+                          Int8List.fromList(message.toString().deviceByteArray),
+                          withoutResponse: true);
+                      // sleep(const Duration(milliseconds: 200));
+                      Future.delayed(const Duration(milliseconds: 200));
+                      await characteristic.write(
+                          Int8List.fromList([0x23]),
+                          withoutResponse: true);
+                      // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                      _logger.debug("定时任务执行中");
+                      _logger.debug("定时发送数据给充电桩:$message#");
+                      // sleep(const Duration(seconds: 1));
+                    }
+                    catch(e)
+                    {
+                      print("characteristicUuid:${characteristic.characteristicUuid}");
+                      print("uuid:${characteristic.uuid}");
+                      print("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
+                      print("serviceUuid:${characteristic.serviceUuid}");
+                      print("remoteId:${characteristic.remoteId}");
+                      print(e);
+                    }
+                  });
+                  timeTaskEn=1;
+                }
+
               // ReceivePort portHeartBeat = ReceivePort();
               // Isolate isolate = await Isolate.spawn(_sendHeartBeatTask, portHeartBeat.sendPort);
               // // compute(_sendHeartBeatTask, portHeartBeat.sendPort);
