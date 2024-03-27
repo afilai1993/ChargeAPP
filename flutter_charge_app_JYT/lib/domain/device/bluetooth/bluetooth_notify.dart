@@ -35,7 +35,7 @@ static List<int> ReceiveData=[];
               try {
                 if(jsonData.contains(",\"chargingTime\":\""))
                   {
-                    jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"21.9"}}#');
+                    jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"37.0"}}#');
                   }
                 jsonData=jsonData.replaceAll("AT+CWJAP?", "");
                 jsonData=jsonData.replaceAll("\",\"recordType\":\"charge\",\"recordDetails\":{\"chargeId\":", "\",\"recordType\":\"Charge\",\"recordDetails\":{\"chargeId\":");
