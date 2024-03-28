@@ -149,9 +149,10 @@ class BluetoothWriter {
 
 //{"messageTypeId":"5","uniqueId":"4781506590","action":"GetRecord","payload":{"chargeBoxSN":"A23-16","userId":"","recordType":"charge","startAddress":null,"startTime":"2024-03-05T15:41:00Z","endTime":"2024-03-07T09:04:12Z"}}#
 //{"messageTypeId":"5","uniqueId":"1711088067494","action":"GetRecord","payload":{"userId":"1","chargeBoxSN":"2100102310200220","recordType":"charge","startTime":"2024-03-01","endTime":"2024-03-31"}}
-            _logger.debug("发送数据给充电桩:$sendData");
+
             if(sendData.contains('SynchroInfo'))//佳茵特充电桩没有SynchroInfo功能
             {
+              _logger.debug("模拟发送SynchroInfo:$sendData");
               String uid="";
               String chargeBoxSN="";
               uid=(item.request.unique.value&0x000000ffffff).toString();
@@ -257,8 +258,47 @@ class BluetoothWriter {
               // });
 
             }
+            else if(sendData.contains('"requestedMessage":"DeviceData"'))//
+              {
+              _logger.debug("模拟发送requestedMessage:DeviceData:$sendData");
+              String uid="";
+              String chargeBoxSN="";
+              uid=(item.request.unique.value&0x000000ffffff).toString();
+              final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+              final jsonObject = jsonDecode(json);
+              chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+              String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","status":"accept"}}#';
+              try {
+                List<int> jsonDataList1=[];
+                jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
+                final data = DeviceTransferData.parse(jsonDataList1);
+                _logger.debug("模拟回复requestedMessage:DeviceData解析:$data");
+              } catch (e, st) {
+                _logger.warn("模拟回复requestedMessage:DeviceData解析失败;$jsonData1", e, st);
+              }
+            }
+            else if(sendData.contains('"action":"GetRecord"'))//
+                {
+              _logger.debug("模拟发送GetRecord:$sendData");
+              String uid="";
+              String chargeBoxSN="";
+              uid=(item.request.unique.value&0x000000ffffff).toString();
+              final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+              final jsonObject = jsonDecode(json);
+              chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+              String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","result":true}}#';
+              try {
+                List<int> jsonDataList1=[];
+                jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
+                final data = DeviceTransferData.parse(jsonDataList1);
+                _logger.debug("模拟回复GetRecord解析:$data");
+              } catch (e, st) {
+                _logger.warn("模拟回复GetRecord解析失败;$jsonData1", e, st);
+              }
+            }
             else
               {
+
                 await characteristic.write(
                     DeviceTransferData(
                         transferMethod: DeviceTransferMethod.master,
@@ -275,7 +315,7 @@ class BluetoothWriter {
                     Int8List.fromList(body1),
                     withoutResponse: true);
                 sleep(const Duration(milliseconds: 500));
-
+                _logger.debug("发送数据给充电桩:$sendData");
               }
             final completer = _completerMap.remove(serial);
             if (completer != null && !completer.completer.isCompleted) {

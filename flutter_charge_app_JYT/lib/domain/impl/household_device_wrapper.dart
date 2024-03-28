@@ -84,7 +84,7 @@ class _WrapperBluetoothDevice {
         return;
       }
       await device.triggerMessage(TriggerMessageType.synchroInfo);
-      sleep(const Duration(milliseconds: 1000));
+      // sleep(const Duration(milliseconds: 1000));
       await device.triggerMessage(TriggerMessageType.deviceData);
       sleep(const Duration(milliseconds: 1000));
       if (_lastSyncRecordTime == null ||
@@ -188,8 +188,8 @@ class _DeviceScheduleTask {
                 0) +
             1;
     sleep(const Duration(milliseconds: 1000));
-    await device.triggerMessage(TriggerMessageType.synchroSchedule);
-    sleep(const Duration(milliseconds: 1000));
+    // await device.triggerMessage(TriggerMessageType.synchroSchedule);
+    // sleep(const Duration(milliseconds: 1000));
     // 定时任务
     Timer(const Duration(seconds: 3), () {
       try {

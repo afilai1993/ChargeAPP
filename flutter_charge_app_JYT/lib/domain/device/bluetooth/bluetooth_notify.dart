@@ -74,8 +74,8 @@ static List<int> ReceiveData=[];
                   characteristic.write(
                       Int8List.fromList(message.toString().deviceByteArray),
                       withoutResponse: true);
-                  // sleep(const Duration(milliseconds: 200));
-                  Future.delayed(const Duration(milliseconds: 200));
+                  sleep(const Duration(milliseconds: 200));
+                  // Future.delayed(const Duration(milliseconds: 200));
                   characteristic.write(
                       Int8List.fromList([0x23]),
                       withoutResponse: true);
