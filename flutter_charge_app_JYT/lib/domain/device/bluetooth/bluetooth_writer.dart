@@ -138,7 +138,7 @@ class BluetoothWriter {
           }
           final body = DeviceTransferJsonBody(
                   messageType: ChargeMessageType.req,
-                  uniqueId: (item.request.unique.value&0x000000ffffff).toString(),
+                  uniqueId: ((item.request.unique.value&0x00000000ffff)+1711618000000).toString(),
                   action: item.request.action,
                   payload: item.request.payload)
               .toDeviceTransferBody();

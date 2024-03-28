@@ -44,7 +44,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
   _BluetoothNotify? _notify;
   _BluetoothRequestManager? _requestManager;
   String? sn;
-  String? userId='1';
+  String userId='1';
   static const int _noResponseSerial = 1;
   int _serial = _noResponseSerial;
   final connectStateProvider =
@@ -100,7 +100,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
     _writer = null;
     _requestManager = null;
     sn = null;
-    userId = null;
+    userId = "0";
   }
 
   @override

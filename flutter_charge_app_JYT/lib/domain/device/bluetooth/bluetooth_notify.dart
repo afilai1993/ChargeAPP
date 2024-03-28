@@ -21,7 +21,7 @@ class _BluetoothNotify {
 
   Stream<Object?> get stream => _provider.createStream(currentGet: false);
 static List<int> ReceiveData=[];
-  void _listen() {
+  void _listen() async{
     _subscription = characteristic.onValueReceived.listen((event) {
       ReceiveData+=event;
       var EndAddr=0;
@@ -63,7 +63,7 @@ static List<int> ReceiveData=[];
                 _logger.debug("解析:$data");
 
                 if(!(jsonData.contains("\",\"result\":")||jsonData.contains("\",\"status\":"))) {
-
+                  sleep(const Duration(milliseconds: 500));
                   String uid="";
                   String chargeBoxSN="";
                   final json = const Utf8Decoder().convert(jsonDataList, 0, jsonDataList.length-1);
@@ -74,7 +74,7 @@ static List<int> ReceiveData=[];
                   characteristic.write(
                       Int8List.fromList(message.toString().deviceByteArray),
                       withoutResponse: true);
-                  sleep(const Duration(milliseconds: 200));
+                  sleep(const Duration(seconds: 1));
                   // Future.delayed(const Duration(milliseconds: 200));
                   characteristic.write(
                       Int8List.fromList([0x23]),
