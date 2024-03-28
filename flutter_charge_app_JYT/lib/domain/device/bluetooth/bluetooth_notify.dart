@@ -38,6 +38,7 @@ static List<int> ReceiveData=[];
                     jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"37.0"}}#');
                   }
                 jsonData=jsonData.replaceAll("AT+CWJAP?", "");
+                jsonData=jsonData.replaceAll("AT+CWJAP?\r\n", "");
                 jsonData=jsonData.replaceAll("\",\"recordType\":\"charge\",\"recordDetails\":{\"chargeId\":", "\",\"recordType\":\"Charge\",\"recordDetails\":{\"chargeId\":");
                 jsonData=jsonData.replaceAll(",\"duration\":0,\"energy\":\"0.00\",\"stopreason\":\"local\",\"errorCode\":0}}}", ',"endTime":"2024-03-21T09:04:08Z","energy":"0.00000","prices":"0USD","stopReason":"app"}}}');
                 jsonData=jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
@@ -47,7 +48,28 @@ static List<int> ReceiveData=[];
                 jsonData=jsonData.replaceAll("\"result\":true,\"items\":7}}", "\"result\":true}}");
                 List<int> jsonDataList=[];
                 jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
-
+                if(jsonData.contains("\",\"action\":\"SynchroStatus\",\""))
+                {
+                  BluetoothWriter.startSynchroStatus=jsonDataList;
+                }
+                if(jsonData.contains("\",\"action\":\"SynchroData\",\"payload\""))
+                {
+                  // serialHeartBeat++;
+                  // uid = (serialHeartBeat & 0x000000ffffff).toString();
+                  // chargeBoxSN = "2100102310200220";
+                  // message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                  // characteristic.write(
+                  //     Int8List.fromList(message.toString().deviceByteArray),
+                  //     withoutResponse: true);
+                  // // sleep(const Duration(milliseconds: 200));
+                  // Future.delayed(const Duration(milliseconds: 200));
+                  // characteristic.write(
+                  //     Int8List.fromList([0x23]),
+                  //     withoutResponse: true);
+                  // // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                  // _logger.debug("定时任务执行中");
+                  // _logger.debug("定时发送数据给充电桩:$message#");
+                }
                 final data = DeviceTransferData.parse(jsonDataList);
                 // final data = String.fromCharCodes(event);
                 _provider.value = data;

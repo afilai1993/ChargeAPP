@@ -184,9 +184,17 @@ class _DeviceScheduleTask {
     sleep(const Duration(milliseconds: 1000));
     await device.triggerMessage(TriggerMessageType.synchroSchedule);
     sleep(const Duration(milliseconds: 1000));
-    // 延迟5秒定时任务
+    // 定时任务
     Timer(const Duration(seconds: 3), () {
-      BluetoothWriter.startHeartBeartEn=1;
+      try {
+        BluetoothWriter.startHeartBeartEn=1;
+
+        final data = DeviceTransferData.parse(BluetoothWriter.startSynchroStatus);
+        _logger.debug("重新加载连接时收的SynchroStatus:$data");
+      } catch (e, st) {
+        _logger.warn("重新加载连接时收的SynchroStatus解析失败;${BluetoothWriter.startSynchroStatus.toString()}", e, st);
+      }
+      BluetoothWriter.startSynchroStatus=[];
       _logger.debug('开启心跳包');
     });
 

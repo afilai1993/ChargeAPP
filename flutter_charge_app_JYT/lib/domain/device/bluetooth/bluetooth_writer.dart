@@ -46,7 +46,10 @@ class BluetoothWriter {
   final Map<int, _RequestCompleter> _completerMap = {};
   Future? _runFuture;
   final _logger = loggerFactory.getLogger("BluetoothWriter");
-
+  static int startHeartBeartEn=0;
+  static int timeTaskEn=0;
+  static int serialHeartBeat = 10;
+  static  List<int> startSynchroStatus = [];
   BluetoothWriter(this.characteristic);
 
   Future writeRequest(_BluetoothRequest request) {
@@ -73,9 +76,7 @@ class BluetoothWriter {
     sleep(const Duration(seconds: 1));
 
   }
-  static int startHeartBeartEn=0;
-  static int timeTaskEn=0;
-  static int serialHeartBeat = 10;
+
   // static void _sendHeartBeatTask(SendPort send) async{
   //
   //   String uid = (serialHeartBeat & 0x000000ffffff).toString();
@@ -181,8 +182,8 @@ class BluetoothWriter {
 
               if(timeTaskEn==0)
                 {
-                  Timer timer = Timer.periodic(Duration(seconds: 2), (timer) async{
-                    print('重复执行的定时任务！');
+                  Timer timer = Timer.periodic(const Duration(seconds: 5), (timer) async{
+                    _logger.debug('重复执行的定时任务！');
                     try
                     {
                       if(BluetoothWriter.startHeartBeartEn>0 && characteristic.device.isConnected)
@@ -213,12 +214,12 @@ class BluetoothWriter {
                     }
                     catch(e)
                     {
-                      print("characteristicUuid:${characteristic.characteristicUuid}");
-                      print("uuid:${characteristic.uuid}");
-                      print("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
-                      print("serviceUuid:${characteristic.serviceUuid}");
-                      print("remoteId:${characteristic.remoteId}");
-                      print(e);
+                      _logger.debug("characteristicUuid:${characteristic.characteristicUuid}");
+                      _logger.debug("uuid:${characteristic.uuid}");
+                      _logger.debug("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
+                      _logger.debug("serviceUuid:${characteristic.serviceUuid}");
+                      _logger.debug("remoteId:${characteristic.remoteId}");
+                      _logger.debug(e);
                     }
                   });
                   timeTaskEn=1;
