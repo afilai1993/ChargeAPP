@@ -186,7 +186,8 @@ class BluetoothWriter {
                     _logger.debug('重复执行的定时任务！');
                     try
                     {
-                      if(BluetoothWriter.startHeartBeartEn>0 && characteristic.device.isConnected)
+                      if(BluetoothWriter.startHeartBeartEn==1 && characteristic.device.isConnected)
+                      // if(BluetoothWriter.startHeartBeartEn>0 && characteristic.device.isConnected)
                         {
                           serialHeartBeat++;
                           uid = (serialHeartBeat & 0x000000ffffff).toString();
@@ -204,6 +205,7 @@ class BluetoothWriter {
                           _logger.debug("定时任务执行中");
                           _logger.debug("定时发送数据给充电桩:$message#");
                           // sleep(const Duration(seconds: 1));
+                          BluetoothWriter.startHeartBeartEn=2;
                         }
                       else
                         {

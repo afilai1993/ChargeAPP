@@ -166,7 +166,13 @@ class _WrapperBluetoothDevice {
         recordType: "charge", startTime: syncStartDate, endTime: syncEndDate);
   }
 }
-
+class StartHeartBeat{
+  late ReceivePort portHeartBeat1;
+  void receivePortAction(ReceivePort portHeartBeat)
+  {
+    portHeartBeat1=portHeartBeat;
+}
+}
 class _DeviceScheduleTask {
   final String address;
   int currentVersion = 0;
@@ -196,6 +202,14 @@ class _DeviceScheduleTask {
       }
       BluetoothWriter.startSynchroStatus=[];
       _logger.debug('开启心跳包');
+      // int serialHeartBeat=10;
+      // String  uid = (serialHeartBeat & 0x000000ffffff).toString();
+      //           String  chargeBoxSN = "2100102310200220";
+      // String  message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+      // BluetoothWriter.sendMessageStatic(message);
+      //             // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+      //             _logger.debug("定时任务执行中");
+      //             _logger.debug("定时发送数据给充电桩:$message#");
     });
 
   }

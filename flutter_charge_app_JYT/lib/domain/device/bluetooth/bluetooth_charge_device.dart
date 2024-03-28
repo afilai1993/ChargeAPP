@@ -230,6 +230,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
       if (!completer.isCompleted) {
         completer.completeError(e);
       }
+      BluetoothWriter.startHeartBeartEn=0;
       timer.cancel();
       subscription?.cancel();
     });

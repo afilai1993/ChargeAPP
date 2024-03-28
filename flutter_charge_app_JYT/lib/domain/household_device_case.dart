@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:chargestation/design.dart';
 import 'package:chargestation/domain/device/charge_device.dart';

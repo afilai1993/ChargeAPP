@@ -33,10 +33,10 @@ static List<int> ReceiveData=[];
               String jsonData="";
               jsonData=String.fromCharCodes(ReceiveData);
               try {
-                if(jsonData.contains(",\"chargingTime\":\""))
-                  {
-                    jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"37.0"}}#');
-                  }
+                // if(jsonData.contains(",\"chargingTime\":\""))
+                //   {
+                //     jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"37.0"}}#');
+                //   }
                 jsonData=jsonData.replaceAll("AT+CWJAP?", "");
                 jsonData=jsonData.replaceAll("AT+CWJAP?\r\n", "");
                 jsonData=jsonData.replaceAll("\",\"recordType\":\"charge\",\"recordDetails\":{\"chargeId\":", "\",\"recordType\":\"Charge\",\"recordDetails\":{\"chargeId\":");
@@ -46,29 +46,33 @@ static List<int> ReceiveData=[];
                 jsonData=jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
                 jsonData=jsonData.replaceAll("\"evseType\":\"NA\"", "\"evseType\":\"-\"");
                 jsonData=jsonData.replaceAll("\"result\":true,\"items\":7}}", "\"result\":true}}");
-                List<int> jsonDataList=[];
-                jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+                List<int> jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
                 if(jsonData.contains("\",\"action\":\"SynchroStatus\",\""))
                 {
                   BluetoothWriter.startSynchroStatus=jsonDataList;
                 }
-                if(jsonData.contains("\",\"action\":\"SynchroData\",\"payload\""))
+                else if(jsonData.contains("\",\"action\":\"SynchroData\",\""))
                 {
-                  // serialHeartBeat++;
-                  // uid = (serialHeartBeat & 0x000000ffffff).toString();
-                  // chargeBoxSN = "2100102310200220";
-                  // message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-                  // characteristic.write(
-                  //     Int8List.fromList(message.toString().deviceByteArray),
-                  //     withoutResponse: true);
-                  // // sleep(const Duration(milliseconds: 200));
-                  // Future.delayed(const Duration(milliseconds: 200));
-                  // characteristic.write(
-                  //     Int8List.fromList([0x23]),
-                  //     withoutResponse: true);
-                  // // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-                  // _logger.debug("定时任务执行中");
-                  // _logger.debug("定时发送数据给充电桩:$message#");
+                  jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"37.0"}}#');
+                  jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+                  String uid="";
+                  String chargeBoxSN="";
+                  final json = const Utf8Decoder().convert(jsonDataList, 0, jsonDataList.length-1);
+                  final jsonObject = jsonDecode(json);
+                  chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+                  uid=jsonObject['uniqueId'];
+                  String message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                  characteristic.write(
+                      Int8List.fromList(message.toString().deviceByteArray),
+                      withoutResponse: true);
+                  // sleep(const Duration(milliseconds: 200));
+                  Future.delayed(const Duration(milliseconds: 200));
+                  characteristic.write(
+                      Int8List.fromList([0x23]),
+                      withoutResponse: true);
+                  // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                  _logger.debug("SynchroData任务执行中");
+                  _logger.debug("SynchroData发送数据给充电桩:$message#");
                 }
                 final data = DeviceTransferData.parse(jsonDataList);
                 // final data = String.fromCharCodes(event);
