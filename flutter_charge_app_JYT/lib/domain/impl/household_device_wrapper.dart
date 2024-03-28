@@ -201,7 +201,7 @@ class _DeviceScheduleTask {
         _logger.warn("重新加载连接时收的SynchroStatus解析失败;${BluetoothWriter.startSynchroStatus.toString()}", e, st);
       }
       BluetoothWriter.startSynchroStatus=[];
-      _logger.debug('开启心跳包');
+      // _logger.debug('开启心跳包');
       // int serialHeartBeat=10;
       // String  uid = (serialHeartBeat & 0x000000ffffff).toString();
       //           String  chargeBoxSN = "2100102310200220";

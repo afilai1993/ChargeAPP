@@ -55,6 +55,15 @@ static List<int> ReceiveData=[];
                 {
                   jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"37.0"}}#');
                   jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+
+                }
+                final data = DeviceTransferData.parse(jsonDataList);
+                // final data = String.fromCharCodes(event);
+                _provider.value = data;
+                _logger.debug("解析:$data");
+
+                if(!(jsonData.contains("\",\"result\":")||jsonData.contains("\",\"status\":"))) {
+
                   String uid="";
                   String chargeBoxSN="";
                   final json = const Utf8Decoder().convert(jsonDataList, 0, jsonDataList.length-1);
@@ -71,13 +80,12 @@ static List<int> ReceiveData=[];
                       Int8List.fromList([0x23]),
                       withoutResponse: true);
                   // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-                  _logger.debug("SynchroData任务执行中");
-                  _logger.debug("SynchroData发送数据给充电桩:$message#");
+                  _logger.debug("回复任务执行中");
+                  _logger.debug("回复数据给充电桩:$message#");
                 }
-                final data = DeviceTransferData.parse(jsonDataList);
-                // final data = String.fromCharCodes(event);
-                _provider.value = data;
-                _logger.debug("解析:$data");
+
+
+
               } catch (e, st) {
                 _logger.warn("解析失败;$ReceiveData", e, st);
                 final String stringData=String.fromCharCodes(ReceiveData);
