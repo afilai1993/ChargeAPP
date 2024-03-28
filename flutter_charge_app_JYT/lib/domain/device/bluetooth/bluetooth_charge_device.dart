@@ -40,7 +40,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
 
   static final _notifyCharacteristicId =
   Guid.fromString("0000c305-0000-1000-8000-00805f9b34fb");
-  _BluetoothWriter? _writer;
+  BluetoothWriter? _writer;
   _BluetoothNotify? _notify;
   _BluetoothRequestManager? _requestManager;
   String? sn;
@@ -120,12 +120,13 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
           e: "蓝牙未打开$currentAdapterState");
     }
     try {
-      await device.connect(timeout: const Duration(seconds: 10));
+      await device.connect(timeout: const Duration(seconds: 20));
     } catch (e) {
-      connectStateProvider.value = HouseholdChargeDeviceConnectState.idle;throw DeviceConnectException(ConnectErrorType.unknown, e: e);
+      connectStateProvider.value = HouseholdChargeDeviceConnectState.idle;
+      throw DeviceConnectException(ConnectErrorType.unknown, e: e);
     }
     connectStateProvider.value = HouseholdChargeDeviceConnectState.ensureKey;
-    _BluetoothWriter? writer;
+    BluetoothWriter? writer;
     _BluetoothNotify? notify;
 
     try {
@@ -152,7 +153,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
         await device.requestMtu(512);
       }
       notify = await _BluetoothNotify.create(notifyCharacteristic);
-      writer = _BluetoothWriter(writeCharacteristic);
+      writer = BluetoothWriter(writeCharacteristic);
       await _matchKey(
           writer: writer,
           notify: notify,
@@ -175,7 +176,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
   }
 
   Future _matchKey(
-      {required _BluetoothWriter writer,
+      {required BluetoothWriter writer,
       required _BluetoothNotify notify,
       required String sn,
       required String userId,
@@ -232,6 +233,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
       timer.cancel();
       subscription?.cancel();
     });
+    BluetoothWriter.startHeartBeartEn=0;
     return completer.future;
   }
 
@@ -256,7 +258,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
         }));
   }
 
-  _BluetoothWriter _requiredWriter() {
+  BluetoothWriter _requiredWriter() {
     final current = _writer;
     if (current != null) {
       return current;
@@ -286,12 +288,13 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
       {required int connectorId,
       required bool isCharge,
       required int current}) async {
-    String chargeBoxSN = "2100102310200220";
-    String uid="123456";
-    String startOrStop=isCharge?"Start":"Stop";
-    String body = '{"messageTypeId":"5","uniqueId":"$uid","action":"Authorize","payload":{"userId":"1","chargeBoxSN":"$chargeBoxSN","purpose":"$startOrStop","current":32,"connectorId":1}}';
-    // print(body);
-    _writer?.sendMessage(body);
+    // String chargeBoxSN = "2100102310200220";
+    // String uid="123456";
+    // String startOrStop=isCharge?"Start":"Stop";
+    // String body = '{"messageTypeId":"5","uniqueId":"$uid","action":"Authorize","payload":{"userId":"1","chargeBoxSN":"$chargeBoxSN","purpose":"$startOrStop","current":32,"connectorId":1}}';
+    // // print(body);
+    // _writer?.sendMessage(body);
+
     // await _BluetoothWriter.sendMessage(body);
     return _getRequestManager()
         .request(_BluetoothRequest(

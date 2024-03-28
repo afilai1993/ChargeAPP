@@ -9,7 +9,7 @@ class _DeviceTransferCall {
 }
 
 class _BluetoothRequestManager {
-  final _BluetoothWriter writer;
+  final BluetoothWriter writer;
   final Map<int, _DeviceTransferCall> callManager = {};
 
   _BluetoothRequestManager(this.writer);

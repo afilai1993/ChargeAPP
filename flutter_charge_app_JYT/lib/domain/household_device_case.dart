@@ -10,7 +10,7 @@ import 'package:chargestation/domain/stream/fetch_data_stream_factory.dart';
 import 'package:chargestation/infrastructure/infrastructure.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
-
+import 'device/bluetooth/bluetooth_charge_device.dart';
 import '../repository/data/vo.dart';
 import 'data/charge_station_dto.dart';
 import 'data/household_vo.dart';

@@ -172,7 +172,7 @@ class _DeviceScheduleTask {
   int currentVersion = 0;
   ChargeDevicePO? devicePO;
   final dateFormat = DateFormat("yyyy-MM-dd");
-
+  final _logger = loggerFactory.getLogger("BluetoothWriter");
   _DeviceScheduleTask(this.address);
 
   Future startSync(HardwareChargeDevice device, ChargeDevicePO devicePO) async {
@@ -184,6 +184,12 @@ class _DeviceScheduleTask {
     sleep(const Duration(milliseconds: 1000));
     await device.triggerMessage(TriggerMessageType.synchroSchedule);
     sleep(const Duration(milliseconds: 1000));
+    // 延迟5秒定时任务
+    Timer(const Duration(seconds: 3), () {
+      BluetoothWriter.startHeartBeartEn=1;
+      _logger.debug('开启心跳包');
+    });
+
   }
 
   Future onReceive(DeviceTransferJsonBody data) async {
