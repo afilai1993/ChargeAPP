@@ -160,7 +160,10 @@ class BluetoothWriter {
                   if(BluetoothWriter.receiveUid !="0" && characteristic.device.isConnected)
                   {
                     _logger.debug('重复执行的定时任务！');
-                    String chargeBoxSN = "2100102310200220";
+                    String chargeBoxSN = "";
+                    final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+                    final jsonObject = jsonDecode(json);
+                    chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
                     String message = '{"messageTypeId":"6","uniqueId":"${BluetoothWriter.receiveUid}","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
                     await characteristic.write(
                         Int8List.fromList(message.toString().deviceByteArray),
@@ -354,7 +357,6 @@ class BluetoothWriter {
                         remainLength: 0,
                         body: body)
                         .result,
-                    // Int8List.fromList(body.values),
                     withoutResponse: true);
 
                 sleep(const Duration(milliseconds: 200));
