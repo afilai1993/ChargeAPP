@@ -99,8 +99,10 @@ class DeviceTransferData {
 
     String uidString=DeviceTransferBody(uint8List.copyRange(0, dataList.length)).toJsonBody().uniqueId;
     int uid = 0;
-    uid=int.parse(uidString)-0x00018E64000000;
-    var uidList=Uint8List.fromList([0x00,0x01,0x1d,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
+    uid=int.parse(uidString);
+    var uidList=Uint8List.fromList([0x01,0x8E,0x1D,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
+    // uid=int.parse(uidString)-0x00018E64000000;
+    // var uidList=Uint8List.fromList([0x00,0x01,0x1d,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
     // var uidList=Uint8List.fromList([(uid>>40)&0xff,(uid>>32)&0xff,(uid>>24)&0xff,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
     return DeviceTransferData(
         transferMethod: DeviceTransferMethod.slave,
@@ -249,8 +251,8 @@ class DeviceTransferUnique {
   const DeviceTransferUnique({
     required this.serial,
     this.property = const DeviceTransferProperty(),
-    this.msAddress = 1,
-    this.version = 0,
+    this.msAddress = 0x8E,
+    this.version = 1,
   });
 
   int get value {
