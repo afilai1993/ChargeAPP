@@ -99,8 +99,8 @@ class DeviceTransferData {
 
     String uidString=DeviceTransferBody(uint8List.copyRange(0, dataList.length)).toJsonBody().uniqueId;
     int uid = 0;
-    uid=int.parse(uidString)-1711618080516;
-    var uidList=Uint8List.fromList([0x00,0x01,0x1d,0x00,(uid>>8)&0xff,uid&0xff]);
+    uid=int.parse(uidString)-0x00018E64000000;
+    var uidList=Uint8List.fromList([0x00,0x01,0x1d,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
     // var uidList=Uint8List.fromList([(uid>>40)&0xff,(uid>>32)&0xff,(uid>>24)&0xff,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
     return DeviceTransferData(
         transferMethod: DeviceTransferMethod.slave,
