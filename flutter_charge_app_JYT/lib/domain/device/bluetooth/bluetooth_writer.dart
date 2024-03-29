@@ -50,6 +50,7 @@ class BluetoothWriter {
   static int timeTaskEn=0;
   static int serialHeartBeat = 10;
   static  List<int> startSynchroStatus = [];
+  static String receiveUid="0";
   BluetoothWriter(this.characteristic);
 
   Future writeRequest(_BluetoothRequest request) {
@@ -149,6 +150,48 @@ class BluetoothWriter {
 
 //{"messageTypeId":"5","uniqueId":"4781506590","action":"GetRecord","payload":{"chargeBoxSN":"A23-16","userId":"","recordType":"charge","startAddress":null,"startTime":"2024-03-05T15:41:00Z","endTime":"2024-03-07T09:04:12Z"}}#
 //{"messageTypeId":"5","uniqueId":"1711088067494","action":"GetRecord","payload":{"userId":"1","chargeBoxSN":"2100102310200220","recordType":"charge","startTime":"2024-03-01","endTime":"2024-03-31"}}
+            if(timeTaskEn==0)
+            {
+              Timer timer = Timer.periodic(const Duration(milliseconds: 100), (timer) async{
+
+                try
+                {
+                  // if(BluetoothWriter.startHeartBeartEn==1 && characteristic.device.isConnected)
+                  if(BluetoothWriter.receiveUid !="0" && characteristic.device.isConnected)
+                  {
+                    _logger.debug('重复执行的定时任务！');
+                    String chargeBoxSN = "2100102310200220";
+                    String message = '{"messageTypeId":"6","uniqueId":"${BluetoothWriter.receiveUid}","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                    await characteristic.write(
+                        Int8List.fromList(message.toString().deviceByteArray),
+                        withoutResponse: true);
+                    // sleep(const Duration(milliseconds: 200));
+                    Future.delayed(const Duration(milliseconds: 200));
+                    await characteristic.write(
+                        Int8List.fromList([0x23]),
+                        withoutResponse: true);
+                    // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
+                    _logger.debug("定时任务执行中");
+                    _logger.debug("定时发送数据给充电桩:$message#");
+                    // sleep(const Duration(seconds: 1));
+                    BluetoothWriter.startHeartBeartEn=2;
+                    BluetoothWriter.receiveUid="0";
+                  }
+
+
+                }
+                catch(e)
+                {
+                  _logger.debug("characteristicUuid:${characteristic.characteristicUuid}");
+                  _logger.debug("uuid:${characteristic.uuid}");
+                  _logger.debug("secondaryServiceUuid:${characteristic.secondaryServiceUuid}");
+                  _logger.debug("serviceUuid:${characteristic.serviceUuid}");
+                  _logger.debug("remoteId:${characteristic.remoteId}");
+                  _logger.debug(e);
+                }
+              });
+              timeTaskEn=1;
+            }
 
             if(sendData.contains('SynchroInfo'))//佳茵特充电桩没有SynchroInfo功能
             {
