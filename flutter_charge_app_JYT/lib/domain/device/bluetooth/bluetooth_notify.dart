@@ -21,8 +21,8 @@ class _BluetoothNotify {
 
   Stream<Object?> get stream => _provider.createStream(currentGet: false);
 static List<int> ReceiveData=[];
-  void _listen() async{
-    _subscription = characteristic.onValueReceived.listen((event) {
+  void _listen() {
+    _subscription = characteristic.onValueReceived.listen((event) async{
       ReceiveData+=event;
       var EndAddr=0;
       EndAddr=event.indexOf(0x23);
@@ -71,17 +71,19 @@ static List<int> ReceiveData=[];
                   chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
                   uid=jsonObject['uniqueId'];
                   String message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-                  characteristic.write(
+                  await characteristic.write(
                       Int8List.fromList(message.toString().deviceByteArray),
                       withoutResponse: true);
-                  sleep(const Duration(seconds: 1));
+                  // sleep(const Duration(seconds: 1));
+                  sleep(const Duration(milliseconds: 200));
                   // Future.delayed(const Duration(milliseconds: 200));
-                  characteristic.write(
+                  await characteristic.write(
                       Int8List.fromList([0x23]),
                       withoutResponse: true);
                   // body = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
                   _logger.debug("回复任务执行中");
                   _logger.debug("回复数据给充电桩:$message#");
+                  sleep(const Duration(milliseconds: 500));
                 }
 
 

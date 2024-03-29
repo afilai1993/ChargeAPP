@@ -195,10 +195,10 @@ class _DeviceScheduleTask {
       try {
         BluetoothWriter.startHeartBeartEn=1;
 
-        final data = DeviceTransferData.parse(BluetoothWriter.startSynchroStatus);
-        _logger.debug("重新加载连接时收的SynchroStatus:$data");
+        // final data = DeviceTransferData.parse(BluetoothWriter.startSynchroStatus);
+        // _logger.debug("重新加载连接时收的SynchroStatus:$data");
       } catch (e, st) {
-        _logger.warn("重新加载连接时收的SynchroStatus解析失败;${BluetoothWriter.startSynchroStatus.toString()}", e, st);
+        // _logger.warn("重新加载连接时收的SynchroStatus解析失败;${BluetoothWriter.startSynchroStatus.toString()}", e, st);
       }
       BluetoothWriter.startSynchroStatus=[];
       // _logger.debug('开启心跳包');

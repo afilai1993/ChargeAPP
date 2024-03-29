@@ -220,11 +220,11 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
             ),
             action: ChargeDeviceAction.handShake,
             payload: {
-          "chargeBoxSN": sn,
-          "userId": userId,
-          "connectionKey": connectionKey,
-          "currentTime":
-              DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(DateTime.now())
+              "userId": "1",
+              "chargeBoxSN": sn,
+              "currentTime":
+              DateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(DateTime.now()),
+              "connectionKey": connectionKey
         }))
         .catchError((e) {
       if (!completer.isCompleted) {

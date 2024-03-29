@@ -138,7 +138,7 @@ class BluetoothWriter {
           }
           final body = DeviceTransferJsonBody(
                   messageType: ChargeMessageType.req,
-                  uniqueId: ((item.request.unique.value&0x00000000ffff)+1711618000000).toString(),
+                  uniqueId: ((item.request.unique.value&0x00000000ffff)+1711618080516).toString(),
                   action: item.request.action,
                   payload: item.request.payload)
               .toDeviceTransferBody();
@@ -152,32 +152,36 @@ class BluetoothWriter {
 
             if(sendData.contains('SynchroInfo'))//佳茵特充电桩没有SynchroInfo功能
             {
-              _logger.debug("模拟发送SynchroInfo:$sendData");
-              String uid="";
-              String chargeBoxSN="";
-              uid=(item.request.unique.value&0x000000ffffff).toString();
-              final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
-              final jsonObject = jsonDecode(json);
-              chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
-              String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","status":"accept"}}#';
-              String jsonData2='{"messageTypeId":"5","uniqueId":"16777215","action":"SynchroInfo","payload":{"chargeBoxSN":"$chargeBoxSN","connectorMain":{"connectionStatus":true,"chargeStatus":"idle","statusCode":0,"startTime":"-","endTime":"-","voltage":"220","current":"0.00","power":"0","electricWork":"0.00000","chargingTime":"0:0:0"},"Temperature1":"37.0","Temperature2":"37.0"}}#';
-              try {
-                List<int> jsonDataList1=[];
-                jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
-                final data = DeviceTransferData.parse(jsonDataList1);
-                _logger.debug("模拟回复SynchroInfo解析:$data");
-              } catch (e, st) {
-                _logger.warn("模拟回复SynchroInfo解析失败;$jsonData1", e, st);
-              }
-              try {
-                List<int> jsonDataList2=[];
-                jsonDataList2=Uint8List.fromList(jsonData2.deviceByteArray);
-                final data = DeviceTransferData.parse(jsonDataList2);
-                _logger.debug("模拟回复SynchroInfo解析:$data");
-              } catch (e, st) {
-                _logger.warn("模拟回复SynchroInfo解析失败;$jsonData2", e, st);
-              }
-              sleep(const Duration(milliseconds: 500));
+              // _logger.debug("模拟发送SynchroInfo:$sendData");
+              // String uid="";
+              // String chargeBoxSN="";
+              // uid=(item.request.unique.value&0x000000ffffff).toString();
+              // final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+              // final jsonObject = jsonDecode(json);
+              // chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+              // String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","status":"accept"}}#';
+              // String jsonData2='{"messageTypeId":"5","uniqueId":"16777215","action":"SynchroInfo","payload":{"chargeBoxSN":"$chargeBoxSN","connectorMain":{"connectionStatus":true,"chargeStatus":"idle","statusCode":0,"startTime":"-","endTime":"-","voltage":"220","current":"0.00","power":"0","electricWork":"0.00000","chargingTime":"0:0:0"},"Temperature1":"37.0","Temperature2":"37.0"}}#';
+              // try {
+              //   List<int> jsonDataList1=[];
+              //   jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
+              //   final data = DeviceTransferData.parse(jsonDataList1);
+              //   _logger.debug("模拟回复SynchroInfo解析:$data");
+              // } catch (e, st) {
+              //   _logger.warn("模拟回复SynchroInfo解析失败;$jsonData1", e, st);
+              // }
+              // try {
+              //   List<int> jsonDataList2=[];
+              //   jsonDataList2=Uint8List.fromList(jsonData2.deviceByteArray);
+              //   final data = DeviceTransferData.parse(jsonDataList2);
+              //   _logger.debug("模拟回复SynchroInfo解析:$data");
+              // } catch (e, st) {
+              //   _logger.warn("模拟回复SynchroInfo解析失败;$jsonData2", e, st);
+              // }
+              // sleep(const Duration(milliseconds: 500));
+
+
+
+
               // // 创建一个重复执行的定时任务，每隔1秒执行一次
               // String message="";
               //
@@ -260,41 +264,41 @@ class BluetoothWriter {
             }
             else if(sendData.contains('"requestedMessage":"DeviceData"'))//
               {
-              _logger.debug("模拟发送requestedMessage:DeviceData:$sendData");
-              String uid="";
-              String chargeBoxSN="";
-              uid=(item.request.unique.value&0x000000ffffff).toString();
-              final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
-              final jsonObject = jsonDecode(json);
-              chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
-              String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","status":"accept"}}#';
-              try {
-                List<int> jsonDataList1=[];
-                jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
-                final data = DeviceTransferData.parse(jsonDataList1);
-                _logger.debug("模拟回复requestedMessage:DeviceData解析:$data");
-              } catch (e, st) {
-                _logger.warn("模拟回复requestedMessage:DeviceData解析失败;$jsonData1", e, st);
-              }
+              // _logger.debug("模拟发送requestedMessage:DeviceData:$sendData");
+              // String uid="";
+              // String chargeBoxSN="";
+              // uid=(item.request.unique.value&0x000000ffffff).toString();
+              // final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+              // final jsonObject = jsonDecode(json);
+              // chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+              // String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","status":"accept"}}#';
+              // try {
+              //   List<int> jsonDataList1=[];
+              //   jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
+              //   final data = DeviceTransferData.parse(jsonDataList1);
+              //   _logger.debug("模拟回复requestedMessage:DeviceData解析:$data");
+              // } catch (e, st) {
+              //   _logger.warn("模拟回复requestedMessage:DeviceData解析失败;$jsonData1", e, st);
+              // }
             }
             else if(sendData.contains('"action":"GetRecord"'))//
                 {
-              _logger.debug("模拟发送GetRecord:$sendData");
-              String uid="";
-              String chargeBoxSN="";
-              uid=(item.request.unique.value&0x000000ffffff).toString();
-              final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
-              final jsonObject = jsonDecode(json);
-              chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
-              String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","result":true}}#';
-              try {
-                List<int> jsonDataList1=[];
-                jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
-                final data = DeviceTransferData.parse(jsonDataList1);
-                _logger.debug("模拟回复GetRecord解析:$data");
-              } catch (e, st) {
-                _logger.warn("模拟回复GetRecord解析失败;$jsonData1", e, st);
-              }
+              // _logger.debug("模拟发送GetRecord:$sendData");
+              // String uid="";
+              // String chargeBoxSN="";
+              // uid=(item.request.unique.value&0x000000ffffff).toString();
+              // final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+              // final jsonObject = jsonDecode(json);
+              // chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+              // String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","result":true}}#';
+              // try {
+              //   List<int> jsonDataList1=[];
+              //   jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
+              //   final data = DeviceTransferData.parse(jsonDataList1);
+              //   _logger.debug("模拟回复GetRecord解析:$data");
+              // } catch (e, st) {
+              //   _logger.warn("模拟回复GetRecord解析失败;$jsonData1", e, st);
+              // }
             }
             else
               {
