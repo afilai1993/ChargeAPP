@@ -368,6 +368,13 @@ class GPChargeSynchroDataConnector {
     this.chargingTime,
   });
 
+  // static updateChargingTime(String time)
+  // {
+  //   GPChargeSynchroDataConnector(
+  //     chargingTime: time,
+  //   );
+  // }
+
   factory GPChargeSynchroDataConnector.fromJson(dynamic json) =>
       GPChargeSynchroDataConnector(
         voltage: json["voltage"],

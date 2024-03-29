@@ -242,12 +242,48 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
       ),
     );
   }
-
+  String secondsToChargingTime(int time)
+  {
+    int totalSeconds = time;
+    int hours = totalSeconds ~/ 3600;
+    int minutes = (totalSeconds % 3600) ~/ 60;
+    int seconds = totalSeconds % 60;
+    String timeString = '${hours.toString()}:${minutes.toString()}:${seconds.toString()}';
+    // String timeString = '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    print(timeString); // 输出：01:02:03
+    return timeString;
+  }
   @override
   bool get wantKeepAlive => true;
-
+static String oldChargingTime="0";
+  static int oldTime=0;
   String get chargingTime {
    // final chargeStatus = synchroStatus?.connectorMain?.chargeStatus;
+    DateTime now = DateTime.now();
+    int seconds = now.second;
+    print('当前时间的秒数为：$seconds');
+    if(seconds-oldTime>=1)
+      {
+        oldTime=seconds;
+
+    // DateTime currentTime = DateTime.now();
+    // DateTime targetTime = currentTime.add(Duration(seconds: 1));
+    //
+    // if (targetTime.isBefore(currentTime)) {
+    //   print("时间已经过了一秒");
+    // } else {
+    //   print("时间还未过一秒");
+    // }
+
+      }
+    else
+      {
+        if(synchroStatus?.connectorMain?.chargeStatus == 'charging'&& oldChargingTime==(synchroData?.connectorMain?.chargingTime ?? "-"))
+        {
+          oldChargingTime=synchroData?.connectorMain?.chargingTime ?? "-";
+          return "-";
+        }
+      }
     return synchroData?.connectorMain?.chargingTime ?? "-";
   }
 }
