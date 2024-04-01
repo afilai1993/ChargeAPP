@@ -18,7 +18,16 @@ class _BluetoothNotify {
   void cancel() {
     _subscription?.cancel();
   }
-
+  String addMinutesToDateTime(String originalDateTime, int minutesToAdd) {
+    _logger.debug("修改addMinutesToDateTime");
+    DateTime parsedDateTime = DateTime.parse(originalDateTime);
+    Duration durationToAdd = Duration(minutes: minutesToAdd);
+    DateTime newDateTime = parsedDateTime.add(durationToAdd);
+    String newDateTimeString = newDateTime.toIso8601String();
+    newDateTimeString=newDateTimeString.substring(0,originalDateTime.length-1);
+    newDateTimeString+='Z';
+    return newDateTimeString;
+  }
   Stream<Object?> get stream => _provider.createStream(currentGet: false);
   // static List<int> ReceiveDataOrigin=[];
   static List<int> ReceiveData=[];
@@ -38,30 +47,47 @@ class _BluetoothNotify {
               String jsonData="";
               jsonData=String.fromCharCodes(ReceiveData);
               try {
-                // if(jsonData.contains(",\"chargingTime\":\""))
-                //   {
-                //     jsonData=jsonData.replaceAll("}}}#", '},"Temperature1":"37.0","Temperature2":"37.0"}}#');
-                //   }
-                jsonData=jsonData.replaceAll("AT+CWJAP?", "");
-                jsonData=jsonData.replaceAll("AT+CWJAP?\r\n", "");
-                jsonData=jsonData.replaceAll("\",\"recordType\":\"charge\",\"recordDetails\":{\"chargeId\":", "\",\"recordType\":\"Charge\",\"recordDetails\":{\"chargeId\":");
-                jsonData=jsonData.replaceAll(",\"duration\":0,\"energy\":\"0.00\",\"stopreason\":\"local\",\"errorCode\":0}}}", ',"endTime":"2024-03-21T09:04:08Z","energy":"0.00000","prices":"0USD","stopReason":"app"}}}');
-                jsonData=jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
-                jsonData=jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
-                jsonData=jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
-                jsonData=jsonData.replaceAll("\"evseType\":\"NA\"", "\"evseType\":\"-\"");
-                jsonData=jsonData.replaceAll("\"result\":true,\"items\":7}}", "\"result\":true}}");
-                List<int> jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
-                if(jsonData.contains("\",\"action\":\"SynchroStatus\",\""))
-                {
-                  BluetoothWriter.startSynchroStatus=jsonDataList;
+                jsonData = jsonData.replaceAll("AT+CWJAP?", "");
+                jsonData = jsonData.replaceAll("AT+CWJAP?\r\n", "");
+                jsonData = jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
+                jsonData = jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
+                jsonData = jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
+                jsonData = jsonData.replaceAll("\"evseType\":\"NA\"", "\"evseType\":\"-\"");
+                if (jsonData.contains("\",\"action\":\"SynchroData\",\"")) {
+                  jsonData = jsonData.replaceAll("}}}", '},"Temperature1":"37.0","Temperature2":"37.0"}}');
                 }
-                else if(jsonData.contains("\",\"action\":\"SynchroData\",\""))
+                if(jsonData.contains("\"result\":true,\"items\":"))
                 {
-                  jsonData=jsonData.replaceAll("}}}", '},"Temperature1":"37.0","Temperature2":"37.0"}}');
-                  jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+                  jsonData=jsonData.substring(0,jsonData.indexOf(',"items":'))+"}}#";
+                }
+                if(jsonData.contains("\"action\":\"UploadRecord\""))
+                {
+                  _logger.debug("修改UploadRecord");
+                  List<int> dataList=Uint8List.fromList(jsonData.deviceByteArray);
+                  final json = const Utf8Decoder().convert(dataList, 0, dataList.length-1);
+                  final jsonObject = jsonDecode(json);
+                  int duration=jsonObject['payload']['recordDetails']['duration'] as int;
+                  String startTime=jsonObject['payload']['recordDetails']['startTime'] as String;
+                  String endTime=addMinutesToDateTime(startTime,duration);
+                  String energy=jsonObject['payload']['recordDetails']['energy'] as String;
+                  // String stopreason=jsonObject['payload']['recordDetails']['stopreason'] as String;
+                  jsonData = jsonData.replaceAll("\",\"recordType\":\"charge\",", "\",\"recordType\":\"Charge\",");
+                  jsonData = jsonData.substring(0,jsonData.indexOf(',"duration"'));
+                  // jsonData+=',"endTime":"$endTime","energy":"$energy","prices":"0USD","stopReason":"$stopreason"}}}#';
+                  jsonData+=',"endTime":"$endTime","energy":"$energy","prices":"0USD","stopReason":"app"}}}#';
+                }
 
-                }
+                List<int> jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+                // if(jsonData.contains("\",\"action\":\"SynchroStatus\",\""))
+                // {
+                //   BluetoothWriter.startSynchroStatus=jsonDataList;
+                // }
+                // else if(jsonData.contains("\",\"action\":\"SynchroData\",\""))
+                // {
+                //   jsonData=jsonData.replaceAll("}}}", '},"Temperature1":"37.0","Temperature2":"37.0"}}');
+                //   jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
+                //
+                // }
                 final data = DeviceTransferData.parse(jsonDataList);
                 // final data = String.fromCharCodes(event);
                 _provider.value = data;
@@ -76,6 +102,8 @@ class _BluetoothNotify {
                   chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
                   uid=jsonObject['uniqueId'];
                   BluetoothWriter.receiveUid=uid;
+
+                }
                   // String message = '{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
                   // await characteristic.write(
                   //     Int8List.fromList(message.toString().deviceByteArray),
@@ -137,7 +165,6 @@ class _BluetoothNotify {
 
 
 
-                }
 
 
 

@@ -328,25 +328,25 @@ class BluetoothWriter {
               //   _logger.warn("模拟回复requestedMessage:DeviceData解析失败;$jsonData1", e, st);
               // }
             }
-            else if(sendData.contains('"action":"GetRecord"'))//
-                {
-              // _logger.debug("模拟发送GetRecord:$sendData");
-              // String uid="";
-              // String chargeBoxSN="";
-              // uid=(item.request.unique.value&0x000000ffffff).toString();
-              // final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
-              // final jsonObject = jsonDecode(json);
-              // chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
-              // String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","result":true}}#';
-              // try {
-              //   List<int> jsonDataList1=[];
-              //   jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
-              //   final data = DeviceTransferData.parse(jsonDataList1);
-              //   _logger.debug("模拟回复GetRecord解析:$data");
-              // } catch (e, st) {
-              //   _logger.warn("模拟回复GetRecord解析失败;$jsonData1", e, st);
-              // }
-            }
+            // else if(sendData.contains('"action":"GetRecord"'))//
+            //     {
+            //   // _logger.debug("模拟发送GetRecord:$sendData");
+            //   // String uid="";
+            //   // String chargeBoxSN="";
+            //   // uid=(item.request.unique.value&0x000000ffffff).toString();
+            //   // final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+            //   // final jsonObject = jsonDecode(json);
+            //   // chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+            //   // String jsonData1='{"messageTypeId":"6","uniqueId":"$uid","payload":{"chargeBoxSN":"$chargeBoxSN","result":true}}#';
+            //   // try {
+            //   //   List<int> jsonDataList1=[];
+            //   //   jsonDataList1=Uint8List.fromList(jsonData1.deviceByteArray);
+            //   //   final data = DeviceTransferData.parse(jsonDataList1);
+            //   //   _logger.debug("模拟回复GetRecord解析:$data");
+            //   // } catch (e, st) {
+            //   //   _logger.warn("模拟回复GetRecord解析失败;$jsonData1", e, st);
+            //   // }
+            // }
             else
               {
 

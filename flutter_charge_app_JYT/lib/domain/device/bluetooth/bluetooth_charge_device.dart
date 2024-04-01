@@ -255,7 +255,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
         action: ChargeDeviceAction.triggerMessage,
         payload: {
           "chargeBoxSN": sn,
-          "userId": userId,
+          "userId": "1",
           "requestedMessage": messageType.value,
         }));
   }
@@ -306,7 +306,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
             action: ChargeDeviceAction.authorize,
             payload: {
           "chargeBoxSN": sn,
-          "userId": userId,
+          "userId": "1",
           "connectorId": connectorId,
           "current": current,
           "purpose": isCharge ? "Start" : "Stop"
@@ -348,7 +348,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
                 : ChargeDeviceAction.setSchedule,
             payload: {
           "chargeBoxSN": sn,
-          "userId": userId,
+              "userId": "1",
           "reservationId": reservationId,
           "connectorId": connectorId,
           "schedule": scheduleList.map((e) {
@@ -383,7 +383,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
         action: ChargeDeviceAction.getRecord,
         payload: {
           "chargeBoxSN": sn,
-          "userId": userId,
+          "userId": "1",
           "recordType": recordType,
           // "startAddress": startAddress,
           if (startTime != null) "startTime": startTime,
