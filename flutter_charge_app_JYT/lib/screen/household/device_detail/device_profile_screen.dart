@@ -18,10 +18,78 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
   final BoolStateRef chargeLoading = BoolStateRef();
   HouseholdDeviceDetail? detail;
 
+  static String _chargingTimeUpdate ="0:0:0";
+  int count = 0;
+  void _updateChargingTime() {
+    // 模拟更新 _chargingTimeUpdate 的值
+    setState(() {
+      _chargingTimeUpdate;
+      debugPrint('_chargingTimeUpdate:$_chargingTimeUpdate');
+    });
+  }
+  // int timeToSeconds(String time) {
+  //   List<String> parts = time.split(':');
+  //   int hours = int.parse(parts[0]);
+  //   int minutes = int.parse(parts[1]);
+  //   int seconds = int.parse(parts[2]);
+  //
+  //   return hours * 3600 + minutes * 60 + seconds;
+  // }
+  int timeToSeconds(String time) {
+    if(time=="-")
+      {
+        return 0;
+      }
+    else
+      {
+        List<String> parts = time.split(':');
+        int hours = int.parse(parts[0]);
+        int minutes = int.parse(parts[1]);
+        int seconds = int.parse(parts[2]);
+
+        Duration duration = Duration(hours: hours, minutes: minutes, seconds: seconds);
+        return duration.inSeconds;
+      }
+
+  }
+  String secondsToTime(int seconds) {
+    int hours = seconds ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    int remainingSeconds = seconds % 60;
+
+    return '$hours:$minutes:$remainingSeconds';
+  }
+  void calculateChargingTime1() {
+    // 计算充电时间
+    // 返回新的_chargingTimeUpdate值
+
+    Timer.periodic(const Duration(seconds: 1), (timer) async{
+     int timeOld=timeToSeconds(_chargingTimeUpdate);
+     int timeNow=timeToSeconds(chargingTime);
+     // if(timeOld>=timeNow)
+     //   {
+         _chargingTimeUpdate=secondsToTime(timeOld+1);
+     //   }
+     // else
+     //   {
+     //     _chargingTimeUpdate=chargingTime;
+     //   }
+     debugPrint('执行定时chargingTime任务');
+      _updateChargingTime();
+
+    });
+
+  }
+
+
+
+
   @override
   void initState() {
     super.initState();
-
+      // 在初始化时启动监听
+    calculateChargingTime1();
+    _chargingTimeUpdate=chargingTime;
     findCase<HouseholdDeviceCase>()
         .getDeviceDetail(widget.address)
         .then((value) {
@@ -169,6 +237,7 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
       Color(0x76f6ec7e),
       Color(0x767fc4be),
     ];
+
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Row(
@@ -230,7 +299,8 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
               ),
               const SizedBox(height: 12),
               _SmallDataProfileItem(
-                  value: chargingTime,
+                  // value: chargingTime,
+                  value: _chargingTimeUpdate,
                   label: S.current.profile_total_time,
                   width: smallSize,
                   height: smallSize,
@@ -259,31 +329,32 @@ static String oldChargingTime="0";
   static int oldTime=0;
   String get chargingTime {
    // final chargeStatus = synchroStatus?.connectorMain?.chargeStatus;
-    DateTime now = DateTime.now();
-    int seconds = now.second;
-    print('当前时间的秒数为：$seconds');
-    if(seconds-oldTime>=1)
-      {
-        oldTime=seconds;
+   //  DateTime now = DateTime.now();
+   //  int seconds = now.second;
+   //  print('当前时间的秒数为：$seconds');
+   //  if(seconds-oldTime>=1)
+   //    {
+   //      oldTime=seconds;
+   //
+   //  // DateTime currentTime = DateTime.now();
+   //  // DateTime targetTime = currentTime.add(Duration(seconds: 1));
+   //  //
+   //  // if (targetTime.isBefore(currentTime)) {
+   //  //   print("时间已经过了一秒");
+   //  // } else {
+   //  //   print("时间还未过一秒");
+   //  // }
+   //
+   //    }
+   //  else
+   //    {
+   //      if(synchroStatus?.connectorMain?.chargeStatus == 'charging'&& oldChargingTime==(synchroData?.connectorMain?.chargingTime ?? "-"))
+   //      {
+   //        oldChargingTime=synchroData?.connectorMain?.chargingTime ?? "-";
+   //        return "-";
+   //      }
+   //    }
 
-    // DateTime currentTime = DateTime.now();
-    // DateTime targetTime = currentTime.add(Duration(seconds: 1));
-    //
-    // if (targetTime.isBefore(currentTime)) {
-    //   print("时间已经过了一秒");
-    // } else {
-    //   print("时间还未过一秒");
-    // }
-
-      }
-    else
-      {
-        if(synchroStatus?.connectorMain?.chargeStatus == 'charging'&& oldChargingTime==(synchroData?.connectorMain?.chargingTime ?? "-"))
-        {
-          oldChargingTime=synchroData?.connectorMain?.chargingTime ?? "-";
-          return "-";
-        }
-      }
     return synchroData?.connectorMain?.chargingTime ?? "-";
   }
 }

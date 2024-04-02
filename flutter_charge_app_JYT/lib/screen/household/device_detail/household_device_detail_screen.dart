@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chargestation/component/component.dart';
 import 'package:chargestation/design.dart';
 import 'package:chargestation/domain/device/charge_device.dart';
