@@ -67,26 +67,30 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
      int timeOld=timeToSeconds(_chargingTimeUpdate);
      int timeNow=timeToSeconds(chargingTime);
      final isCharge = synchroStatus?.connectorMain?.chargeStatus == 'charging';
-     if(isCharge)
-       {
-         if(timeNow>timeOld)
-           {
-             _chargingTimeUpdate=chargingTime;
-
-           }
-         else
-           {
-             if(timeOld-timeNow<5)
-               {
-                 _chargingTimeUpdate=secondsToTime(timeOld+1);
-               }
-             else
-               {
-                 _chargingTimeUpdate=chargingTime;
-               }
-
-           }
-       }
+     if(timeOld-timeNow<5&&isCharge&&timeOld-timeNow>=0)
+     {
+       _chargingTimeUpdate=secondsToTime(timeOld+1);
+     }
+     // if(isCharge)
+     //   {
+     //     if(timeNow>timeOld)
+     //       {
+     //         _chargingTimeUpdate=chargingTime;
+     //
+     //       }
+     //     else
+     //       {
+     //         if(timeOld-timeNow<5)
+     //           {
+     //             _chargingTimeUpdate=secondsToTime(timeOld+1);
+     //           }
+     //         else
+     //           {
+     //             _chargingTimeUpdate=chargingTime;
+     //           }
+     //
+     //       }
+     //   }
      else
        {
          _chargingTimeUpdate=chargingTime;
