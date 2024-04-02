@@ -310,8 +310,9 @@ class BluetoothWriter {
 
             }
             //{"messageTypeId":"5","uniqueId":"1712029759937","action":"Reserve","payload":{"userId":"1","chargeBoxSN":"2100102310200220","reservationId":0,"connectorId":1,"purpose":"Reserve","startTime":"2024-04-02T11:51:00Z","endTime":"2024-04-02T11:52:00Z","current":32}}
+            //{"messageTypeId":"5","uniqueId":"1691632595397","action":"Reserve","payload":{"userId":"1","chargeBoxSN":"11222","reservationId":0,"connectorId":1,"purpose":"Cancel","startTime":null,"endTime":null,"current":null}}#
             //{"messageTypeId":"5","uniqueId":"4781506592","action":"SetSchedule","payload":{"chargeBoxSN":"A23-16","userId":"","reservationId":1,"connectorId":1,"schedule":[{"startDate":"2024-02-19","endDate":"2024-02-20","startTime":"14:33:49 ","endTime":"14:34:57 ","current":20,"isRecurring":"1,,,,,,,2,,,,,,,3"}]}}#
-            else if(sendData.contains('"action":"SetSchedule"')){
+            else if(sendData.contains('"action":"SetSchedule"')||sendData.contains('"action":"CancelSchedule"')){
               String uid="";
               String chargeBoxSN="";
               uid=(item.request.unique.value).toString();
@@ -325,7 +326,15 @@ class BluetoothWriter {
               String endTime=endDate+'T'+scheduleObject['endTime']+'Z';
               int current=scheduleObject['current'];
               // String message = '{"messageTypeId":"6","uniqueId":"${BluetoothWriter.receiveUid}","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
-             String message = '{"messageTypeId":"5","uniqueId":"$uid","action":"Reserve","payload":{"userId":"1","chargeBoxSN":"$chargeBoxSN","reservationId":0,"connectorId":1,"purpose":"Reserve","startTime":"$startTime","endTime":"$endTime","current":$current}}';
+             String message = "";
+             if(sendData.contains('"action":"SetSchedule"'))
+                {
+                  message = '{"messageTypeId":"5","uniqueId":"$uid","action":"Reserve","payload":{"userId":"1","chargeBoxSN":"$chargeBoxSN","reservationId":0,"connectorId":1,"purpose":"Reserve","startTime":"$startTime","endTime":"$endTime","current":$current}}';
+                }
+             else
+               {
+                 message ='{"messageTypeId":"5","uniqueId":"$uid","action":"Reserve","payload":{"userId":"1","chargeBoxSN":"$chargeBoxSN","reservationId":0,"connectorId":1,"purpose":"Cancel","startTime":null,"endTime":null,"current":null}}';
+               }
               await characteristic.write(
                   Int8List.fromList(message.toString().deviceByteArray),
                   withoutResponse: true);
