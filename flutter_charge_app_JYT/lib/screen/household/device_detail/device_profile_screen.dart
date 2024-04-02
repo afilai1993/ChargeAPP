@@ -229,6 +229,7 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
               .requestCharge(widget.address, chargeStatus != "charging"))
           .onSuccess((result) {
         if (result) {
+          _chargingTimeUpdate ="0:0:0";
           showToast(S.current.request_success);
         } else {
           showToast(S.current.request_fail);
