@@ -59,47 +59,52 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
 
     return '$hours:$minutes:$remainingSeconds';
   }
+  static int timeEn=0;
   void calculateChargingTime1() {
     // 计算充电时间
     // 返回新的_chargingTimeUpdate值
-
-    Timer.periodic(const Duration(seconds: 1), (timer) async{
-     int timeOld=timeToSeconds(_chargingTimeUpdate);
-     int timeNow=timeToSeconds(chargingTime);
-     final isCharge = synchroStatus?.connectorMain?.chargeStatus == 'charging';
-     if(timeOld-timeNow<5&&isCharge&&timeOld-timeNow>=0)
+   if(timeEn==0)
      {
-       _chargingTimeUpdate=secondsToTime(timeOld+1);
+       Timer.periodic(const Duration(seconds: 1), (timer) async{
+         timeEn=1;
+         int timeOld=timeToSeconds(_chargingTimeUpdate);
+         int timeNow=timeToSeconds(chargingTime);
+         final isCharge = synchroStatus?.connectorMain?.chargeStatus == 'charging';
+         if(timeOld-timeNow<5&&isCharge&&timeOld-timeNow>=0)
+         {
+           _chargingTimeUpdate=secondsToTime(timeOld+1);
+         }
+         // if(isCharge)
+         //   {
+         //     if(timeNow>timeOld)
+         //       {
+         //         _chargingTimeUpdate=chargingTime;
+         //
+         //       }
+         //     else
+         //       {
+         //         if(timeOld-timeNow<5)
+         //           {
+         //             _chargingTimeUpdate=secondsToTime(timeOld+1);
+         //           }
+         //         else
+         //           {
+         //             _chargingTimeUpdate=chargingTime;
+         //           }
+         //
+         //       }
+         //   }
+         else
+         {
+           _chargingTimeUpdate=chargingTime;
+         }
+
+         debugPrint('${DateTime.now()}:执行定时chargingTime任务');
+         _updateChargingTime();
+
+       });
      }
-     // if(isCharge)
-     //   {
-     //     if(timeNow>timeOld)
-     //       {
-     //         _chargingTimeUpdate=chargingTime;
-     //
-     //       }
-     //     else
-     //       {
-     //         if(timeOld-timeNow<5)
-     //           {
-     //             _chargingTimeUpdate=secondsToTime(timeOld+1);
-     //           }
-     //         else
-     //           {
-     //             _chargingTimeUpdate=chargingTime;
-     //           }
-     //
-     //       }
-     //   }
-     else
-       {
-         _chargingTimeUpdate=chargingTime;
-       }
 
-     debugPrint('执行定时chargingTime任务');
-      _updateChargingTime();
-
-    });
 
   }
 
