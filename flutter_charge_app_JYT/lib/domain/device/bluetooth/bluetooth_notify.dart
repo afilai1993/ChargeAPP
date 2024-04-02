@@ -49,6 +49,7 @@ class _BluetoothNotify {
               try {
                 jsonData = jsonData.replaceAll("AT+CWJAP?", "");
                 jsonData = jsonData.replaceAll("AT+CWJAP?\r\n", "");
+                jsonData = jsonData.replaceAll('"r"charge"', "\"recordType\":\"Charge\"");
                 jsonData = jsonData.replaceAll("\"connectorStatus\":0", "\"connectorStatus\":\"wait\"");
                 jsonData = jsonData.replaceAll("\"PncStatus\":false", "\"PncStatus\":4");
                 jsonData = jsonData.replaceAll("\"loadbalance\":0", "\"loadbalance\":false");
