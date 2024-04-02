@@ -66,14 +66,32 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
     Timer.periodic(const Duration(seconds: 1), (timer) async{
      int timeOld=timeToSeconds(_chargingTimeUpdate);
      int timeNow=timeToSeconds(chargingTime);
-     // if(timeOld>=timeNow)
-     //   {
-         _chargingTimeUpdate=secondsToTime(timeOld+1);
-     //   }
-     // else
-     //   {
-     //     _chargingTimeUpdate=chargingTime;
-     //   }
+     final isCharge = synchroStatus?.connectorMain?.chargeStatus == 'charging';
+     if(isCharge)
+       {
+         if(timeNow>timeOld)
+           {
+             _chargingTimeUpdate=chargingTime;
+
+           }
+         else
+           {
+             if(timeOld-timeNow<5)
+               {
+                 _chargingTimeUpdate=secondsToTime(timeOld+1);
+               }
+             else
+               {
+                 _chargingTimeUpdate=chargingTime;
+               }
+
+           }
+       }
+     else
+       {
+         _chargingTimeUpdate=chargingTime;
+       }
+
      debugPrint('执行定时chargingTime任务');
       _updateChargingTime();
 
