@@ -84,30 +84,37 @@ class _HouseholdMineScreenState extends State<HouseholdMineScreen>
           context.navigateTo("/household/statistic");
         },
       ),
-      // _MineMenuItem(
-      //   iconName: "count.svg",
-      //   name: "导出日志",
-      //   onClick: () {
-      //     uiTask
-      //         .options(const UITaskOption(isShowLoading: true))
-      //         .run(Future(() async {
-      //       final encoder = ZipFileEncoder();
-      //       final zipFilePath = (await getShareLogFile()).path;
-      //       //创建zip文件
-      //       encoder.create(zipFilePath);
-      //       //直接扔整个文件夹片进去
-      //       await encoder.addDirectory((await getLogDir()));
-      //       encoder.close();
-      //       return zipFilePath;
-      //     })).onSuccess((result) {
-      //       final fileParts = result!.split(Platform.pathSeparator);
-      //       Share.shareXFiles(
-      //         [XFile(result!)],
-      //         text: fileParts[fileParts.length - 1],
-      //       );
-      //     });
-      //   },
-      // )
+
+
+      //导出日志
+      _MineMenuItem(
+        iconName: "count.svg",
+        name: "导出日志",
+        onClick: () {
+          uiTask
+              .options(const UITaskOption(isShowLoading: true))
+              .run(Future(() async {
+            final encoder = ZipFileEncoder();
+            final zipFilePath = (await getShareLogFile()).path;
+            //创建zip文件
+            encoder.create(zipFilePath);
+            //直接扔整个文件夹片进去
+            await encoder.addDirectory((await getLogDir()));
+            encoder.close();
+            return zipFilePath;
+          })).onSuccess((result) {
+            final fileParts = result!.split(Platform.pathSeparator);
+            Share.shareXFiles(
+              [XFile(result!)],
+              text: fileParts[fileParts.length - 1],
+            );
+          });
+        },
+      )
+      //导出日志
+
+
+
     ];
     if (isLogin) {
       menuList.addAll([

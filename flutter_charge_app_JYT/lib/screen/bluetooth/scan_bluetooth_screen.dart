@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:chargestation/component/action_bottom_sheet_scaffold.dart';
 import 'package:chargestation/component/component.dart';
 import 'package:chargestation/design.dart';
@@ -323,7 +323,7 @@ class _BluetoothDeviceItem extends StatelessWidget {
                   : scanResult.advertisementData.advName)),
           SizedBox(
               height: 30,
-              child: GPFilledButton(text: "连接", onPressed: onConnectClick))
+              child: GPFilledButton(text:Intl.message("connect"), onPressed: onConnectClick))
         ],
       ),
     );
