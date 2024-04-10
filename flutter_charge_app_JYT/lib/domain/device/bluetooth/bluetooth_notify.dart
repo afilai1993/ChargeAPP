@@ -33,6 +33,7 @@ class _BluetoothNotify {
   static List<int> ReceiveData=[];
   void _listen() async{
     _subscription = characteristic.onValueReceived.listen((event) async{
+      try {
       // ReceiveDataOrigin+=event;
       ReceiveData+=event;
       int endAddrFirst=0;
@@ -46,7 +47,7 @@ class _BluetoothNotify {
             {
               String jsonData="";
               jsonData=String.fromCharCodes(ReceiveData);
-              try {
+
                 jsonData = jsonData.replaceAll("AT+CWJAP?", "");
                 jsonData = jsonData.replaceAll("AT+CWJAP?\r\n", "");
                 jsonData = jsonData.replaceAll('"r"charge"', "\"recordType\":\"Charge\"");
@@ -169,11 +170,7 @@ class _BluetoothNotify {
 
 
 
-              } catch (e, st) {
-                _logger.warn("解析失败;$ReceiveData", e, st);
-                final String stringData=String.fromCharCodes(ReceiveData);
-                _logger.debug("解析失败:$stringData");
-              }
+
             }
           else
             {
@@ -193,7 +190,11 @@ class _BluetoothNotify {
            _logger.debug("数据长度超出最大值:$stringData");
            ReceiveData=[];
          }
-
+      } catch (e, st) {
+        _logger.warn("解析失败;$ReceiveData", e, st);
+        final String stringData=String.fromCharCodes(ReceiveData);
+        _logger.debug("解析失败:$stringData");
+      }
     });
   }
 }

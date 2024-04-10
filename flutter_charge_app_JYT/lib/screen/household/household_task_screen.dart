@@ -11,17 +11,11 @@ class HouseholdTaskScreen extends StatefulWidget {
 }
 
 class _HouseholdTaskScreenState extends State<HouseholdTaskScreen>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin{
   late final refreshDelegate = GPPageableRefreshDelegate<ChargeRecordItemVO>(
       onRequest: refreshData, refreshKey: GlobalKey());
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      refreshDelegate.beginRefresh();
-    });
-  }
+
 
   Future refreshData(int page, int size) => context.uiTask
           .run(findCase<HouseholdDeviceCase>().getTimerTaskList(page, size))
@@ -31,6 +25,14 @@ class _HouseholdTaskScreenState extends State<HouseholdTaskScreen>
       }).onFailure((error) {
         refreshDelegate.notifyRefreshFail(page);
       }).future;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      refreshDelegate.beginRefresh();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
