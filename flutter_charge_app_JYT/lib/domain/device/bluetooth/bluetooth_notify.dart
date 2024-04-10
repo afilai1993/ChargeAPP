@@ -90,6 +90,8 @@ class _BluetoothNotify {
                 // {
                 //   BluetoothWriter.startSynchroStatus=jsonDataList;
                 // }
+
+
                 final data = DeviceTransferData.parse(jsonDataList);
                 // final data = String.fromCharCodes(event);
                 _provider.value = data;
