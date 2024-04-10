@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
+// import 'dart:ffi';
 import 'dart:typed_data';
-import 'package:fixnum/fixnum.dart';
+// import 'package:fixnum/fixnum.dart';
 extension DeviceTransferStringExtension on String {
   List<int> get deviceByteArray {
     return const Utf8Encoder().convert(this);
@@ -101,9 +101,6 @@ class DeviceTransferData {
     int uid = 0;
     uid=int.parse(uidString);
     var uidList=Uint8List.fromList([0x01,0x8E,0x1D,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
-    // uid=int.parse(uidString)-0x00018E64000000;
-    // var uidList=Uint8List.fromList([0x00,0x01,0x1d,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
-    // var uidList=Uint8List.fromList([(uid>>40)&0xff,(uid>>32)&0xff,(uid>>24)&0xff,(uid>>16)&0xff,(uid>>8)&0xff,uid&0xff]);
     return DeviceTransferData(
         transferMethod: DeviceTransferMethod.slave,
         unique: DeviceTransferUnique.parse(uidList,0),
