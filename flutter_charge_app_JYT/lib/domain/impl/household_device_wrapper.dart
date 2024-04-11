@@ -401,23 +401,16 @@ class _DeviceDataConsumer {
       return;
     }
 
-    int startTime;
-    int endTime;
+    int startTime=0;
+    int endTime=0;
 
-    final dateTimeString = detail["startTime"];
-    final dateTime = DateTime.parse(dateTimeString);
-    startTime = dateTime.millisecondsSinceEpoch;
-    final dateTimeString1 = detail["endTime"];
-    final dateTime1 = DateTime.parse(dateTimeString1);
-    endTime = dateTime1.millisecondsSinceEpoch;
-    if (startTime == endTime)// 有时会出现问题
-      {
-        final dateTimeFormat = DateFormat(
-          "yyyy-MM-dd'T'HH:mm:ss'Z'",
-        );
-        startTime = dateTimeFormat.parse(detail["startTime"]).millisecondsSinceEpoch;
-        endTime = dateTimeFormat.parse(detail["endTime"]).millisecondsSinceEpoch;
-      }
+
+    final dateTimeFormat = DateFormat(
+      "yyyy-MM-dd'T'HH:mm:ssZ",
+    );
+    startTime = dateTimeFormat.parse(detail["startTime"]).millisecondsSinceEpoch;
+    endTime = dateTimeFormat.parse(detail["endTime"]).millisecondsSinceEpoch;
+
 
     if (startTime > endTime) {
       //有问题的数据，不导入

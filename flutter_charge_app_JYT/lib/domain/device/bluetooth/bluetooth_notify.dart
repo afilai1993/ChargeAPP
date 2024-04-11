@@ -72,11 +72,11 @@ class _BluetoothNotify {
                   String startTime=jsonObject['payload']['recordDetails']['startTime'] as String;
                   String endTime=addMinutesToDateTime(startTime,duration);
                   String energy=jsonObject['payload']['recordDetails']['energy'] as String;
-                  String stopreason=jsonObject['payload']['recordDetails']['stopreason'] as String;
+                  // String stopreason=jsonObject['payload']['recordDetails']['stopreason'] as String;
                   jsonData = jsonData.replaceAll("\",\"recordType\":\"charge\",", "\",\"recordType\":\"Charge\",");
                   jsonData = jsonData.substring(0,jsonData.indexOf(',"duration"'));
-                  jsonData+=',"endTime":"$endTime","energy":"${energy}0000","prices":"0USD","stopReason":"$stopreason"}}}#';
-                  // jsonData+=',"endTime":"$endTime","energy":"${energy}0000","prices":"0USD","stopReason":"app"}}}#';
+                  // jsonData+=',"endTime":"$endTime","energy":"${energy}0000","prices":"0USD","stopReason":"$stopreason"}}}#';
+                  jsonData+=',"endTime":"$endTime","energy":"${energy}0000","prices":"0USD","stopReason":"APP"}}}#';
                   jsonData = jsonData.replaceAll("\"connectorId\":0", "\"connectorId\":1");
                 }
                 List<int> jsonDataList=Uint8List.fromList(jsonData.deviceByteArray);
