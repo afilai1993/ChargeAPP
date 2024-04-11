@@ -33,13 +33,13 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
   //
   // static final _notifyCharacteristicId =
   //     Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
-  static final serviceId =
+  static var serviceId =
   Guid.fromString("0000a002-0000-1000-8000-00805f9b34fb");
 
-  static final _writeCharacteristicId =
+  static var _writeCharacteristicId =
   Guid.fromString("0000c303-0000-1000-8000-00805f9b34fb");
 
-  static final _notifyCharacteristicId =
+  static var _notifyCharacteristicId =
   Guid.fromString("0000c305-0000-1000-8000-00805f9b34fb");
   BluetoothWriter? _writer;
   _BluetoothNotify? _notify;
@@ -104,11 +104,29 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
     userId = "0";
   }
 
+  void setBleUUID(String sn)
+  {
+    if(sn.contains("A23-"))
+      {
+        BluetoothChargeDevice.serviceId = Guid.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+        BluetoothChargeDevice._writeCharacteristicId = Guid.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+        BluetoothChargeDevice._notifyCharacteristicId = Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+      }
+    else
+      {
+        BluetoothChargeDevice.serviceId = Guid.fromString("0000a002-0000-1000-8000-00805f9b34fb");
+        BluetoothChargeDevice._writeCharacteristicId = Guid.fromString("0000c303-0000-1000-8000-00805f9b34fb");
+        BluetoothChargeDevice._notifyCharacteristicId = Guid.fromString("0000c305-0000-1000-8000-00805f9b34fb");
+      }
+
+  }
+
   @override
   Future connect(
       {required String sn,
       required String userId,
       required String connectionKey}) async {
+    setBleUUID(sn);
     if (connectStateProvider.value != HouseholdChargeDeviceConnectState.idle) {
       return;
     }

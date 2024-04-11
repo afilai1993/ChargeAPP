@@ -70,30 +70,30 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
          int timeOld=timeToSeconds(_chargingTimeUpdate);
          int timeNow=timeToSeconds(chargingTime);
          final isCharge = synchroStatus?.connectorMain?.chargeStatus == 'charging';
-         if(timeOld-timeNow<5&&isCharge&&timeOld-timeNow>=0)
-         {
-           _chargingTimeUpdate=secondsToTime(timeOld+1);
-         }
-         // if(isCharge)
-         //   {
-         //     if(timeNow>timeOld)
-         //       {
-         //         _chargingTimeUpdate=chargingTime;
-         //
-         //       }
-         //     else
-         //       {
-         //         if(timeOld-timeNow<5)
-         //           {
-         //             _chargingTimeUpdate=secondsToTime(timeOld+1);
-         //           }
-         //         else
-         //           {
-         //             _chargingTimeUpdate=chargingTime;
-         //           }
-         //
-         //       }
-         //   }
+         // if(timeOld-timeNow<5&&isCharge&&timeOld-timeNow>=0)
+         // {
+         //   _chargingTimeUpdate=secondsToTime(timeOld+1);
+         // }
+         if(isCharge)
+           {
+             if(timeNow>timeOld)
+               {
+                 _chargingTimeUpdate=chargingTime;
+
+               }
+             else
+               {
+                 if(timeOld-timeNow<5)
+                   {
+                     _chargingTimeUpdate=secondsToTime(timeOld+1);
+                   }
+                 else
+                   {
+                     _chargingTimeUpdate=chargingTime;
+                   }
+
+               }
+           }
          else
          {
            _chargingTimeUpdate=chargingTime;
@@ -115,8 +115,8 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
   void initState() {
     super.initState();
       // 在初始化时启动监听
-    calculateChargingTime1();
-    _chargingTimeUpdate=chargingTime;
+    // calculateChargingTime1();
+    // _chargingTimeUpdate=chargingTime;
     findCase<HouseholdDeviceCase>()
         .getDeviceDetail(widget.address)
         .then((value) {
@@ -327,8 +327,8 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
               ),
               const SizedBox(height: 12),
               _SmallDataProfileItem(
-                  // value: chargingTime,
-                  value: _chargingTimeUpdate,
+                  value: chargingTime,
+                  // value: _chargingTimeUpdate,
                   label: S.current.profile_total_time,
                   width: smallSize,
                   height: smallSize,
@@ -356,33 +356,6 @@ class _DeviceProfileScreenState extends State<_DeviceProfileScreen>
 static String oldChargingTime="0";
   static int oldTime=0;
   String get chargingTime {
-   // final chargeStatus = synchroStatus?.connectorMain?.chargeStatus;
-   //  DateTime now = DateTime.now();
-   //  int seconds = now.second;
-   //  print('当前时间的秒数为：$seconds');
-   //  if(seconds-oldTime>=1)
-   //    {
-   //      oldTime=seconds;
-   //
-   //  // DateTime currentTime = DateTime.now();
-   //  // DateTime targetTime = currentTime.add(Duration(seconds: 1));
-   //  //
-   //  // if (targetTime.isBefore(currentTime)) {
-   //  //   print("时间已经过了一秒");
-   //  // } else {
-   //  //   print("时间还未过一秒");
-   //  // }
-   //
-   //    }
-   //  else
-   //    {
-   //      if(synchroStatus?.connectorMain?.chargeStatus == 'charging'&& oldChargingTime==(synchroData?.connectorMain?.chargingTime ?? "-"))
-   //      {
-   //        oldChargingTime=synchroData?.connectorMain?.chargingTime ?? "-";
-   //        return "-";
-   //      }
-   //    }
-
     return synchroData?.connectorMain?.chargingTime ?? "-";
   }
 }

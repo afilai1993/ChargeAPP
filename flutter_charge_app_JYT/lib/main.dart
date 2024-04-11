@@ -1,13 +1,6 @@
-import 'dart:isolate';
-
 import 'package:chargestation/app.dart';
 import 'package:chargestation/infrastructure/infrastructure.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shelf_web_socket/shelf_web_socket.dart';
-import 'package:shelf/shelf_io.dart' as shelf_io;
-import 'package:wifi_iot/wifi_iot.dart';
-
 void main() async {
   /// 初始化
   ///
