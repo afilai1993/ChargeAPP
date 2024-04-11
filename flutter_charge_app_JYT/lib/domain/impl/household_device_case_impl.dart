@@ -9,6 +9,7 @@ class _HouseholdDeviceCaseImpl implements HouseholdDeviceCase {
       required String sn,
       required String name,
       required String key}) async {
+    BluetoothChargeDevice.setBleUUID(sn);
     final device = HardwareChargeDeviceManager.instance.find(address);
     final userId = await userStore.asyncGetValue<String>("userId") ?? "";
     await device.connect(sn: sn, userId: userId, connectionKey: key);

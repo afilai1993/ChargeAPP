@@ -22,25 +22,25 @@ part 'bluetooth_writer.dart';
 part 'bluetooth_notify.dart';
 
 part 'bluetooth_request_manager.dart';
-
+enum ChargerTypeValue {
+  A23("A23", "A23"),
+  Other("Other", "Other");
+  final String key;
+  final String value;
+  const ChargerTypeValue(this.key, this.value);
+}
 class BluetoothChargeDevice implements HardwareChargeDevice {
   final BluetoothDevice device;
-  // static final serviceId =
-  //     Guid.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-  //
-  // static final _writeCharacteristicId =
-  //     Guid.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-  //
-  // static final _notifyCharacteristicId =
-  //     Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+
   static String reserveTime="";
+  static String ChargerType="";
   static var serviceId =
   Guid.fromString("0000a002-0000-1000-8000-00805f9b34fb");
 
-  static var _writeCharacteristicId =
+  static var writeCharacteristicId =
   Guid.fromString("0000c303-0000-1000-8000-00805f9b34fb");
 
-  static var _notifyCharacteristicId =
+  static var notifyCharacteristicId =
   Guid.fromString("0000c305-0000-1000-8000-00805f9b34fb");
   BluetoothWriter? _writer;
   _BluetoothNotify? _notify;
@@ -105,20 +105,22 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
     userId = "0";
   }
 
-  void setBleUUID(String sn)
+  static void setBleUUID(String sn)
   {
     if(sn.contains("A23-"))
-      {
-        BluetoothChargeDevice.serviceId = Guid.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-        BluetoothChargeDevice._writeCharacteristicId = Guid.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-        BluetoothChargeDevice._notifyCharacteristicId = Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
-      }
+    {
+      BluetoothChargeDevice.serviceId = Guid.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+      BluetoothChargeDevice.writeCharacteristicId = Guid.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+      BluetoothChargeDevice.notifyCharacteristicId = Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+      BluetoothChargeDevice.ChargerType=ChargerTypeValue.A23.value;
+    }
     else
-      {
-        BluetoothChargeDevice.serviceId = Guid.fromString("0000a002-0000-1000-8000-00805f9b34fb");
-        BluetoothChargeDevice._writeCharacteristicId = Guid.fromString("0000c303-0000-1000-8000-00805f9b34fb");
-        BluetoothChargeDevice._notifyCharacteristicId = Guid.fromString("0000c305-0000-1000-8000-00805f9b34fb");
-      }
+    {
+      BluetoothChargeDevice.serviceId = Guid.fromString("0000a002-0000-1000-8000-00805f9b34fb");
+      BluetoothChargeDevice.writeCharacteristicId = Guid.fromString("0000c303-0000-1000-8000-00805f9b34fb");
+      BluetoothChargeDevice.notifyCharacteristicId = Guid.fromString("0000c305-0000-1000-8000-00805f9b34fb");
+      BluetoothChargeDevice.ChargerType=ChargerTypeValue.Other.value;
+    }
 
   }
 
@@ -127,7 +129,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
       {required String sn,
       required String userId,
       required String connectionKey}) async {
-    setBleUUID(sn);
+    // setBleUUID(sn);
     if (connectStateProvider.value != HouseholdChargeDeviceConnectState.idle) {
       return;
     }
@@ -152,19 +154,19 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
     try {
       final services = await device.discoverServices();
       final service =
-          services.find((element) => element.serviceUuid == serviceId);
+          services.find((element) => element.serviceUuid == BluetoothChargeDevice.serviceId);
       if (service == null) {
         throw const DeviceConnectException(ConnectErrorType.notFoundService);
       }
       final writeCharacteristic = service.characteristics.find(
-          (element) => element.characteristicUuid == _writeCharacteristicId);
+          (element) => element.characteristicUuid == BluetoothChargeDevice.writeCharacteristicId);
 
       if (writeCharacteristic == null) {
         throw const DeviceConnectException(
             ConnectErrorType.notFoundWriteCharacteristic);
       }
       final notifyCharacteristic = service.characteristics.find(
-          (element) => element.characteristicUuid == _notifyCharacteristicId);
+          (element) => element.characteristicUuid == BluetoothChargeDevice.notifyCharacteristicId);
       if (notifyCharacteristic == null) {
         throw const DeviceConnectException(
             ConnectErrorType.notFoundNotifyCharacteristic);

@@ -148,10 +148,14 @@ class BluetoothWriter {
           final String sendData=String.fromCharCodes(body.values+body1);
 
           try {
-
+            String chargeBoxSN = "";
+            final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
+            final jsonObject = jsonDecode(json);
+            chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+            BluetoothChargeDevice.setBleUUID(chargeBoxSN);
 //{"messageTypeId":"5","uniqueId":"4781506590","action":"GetRecord","payload":{"chargeBoxSN":"A23-16","userId":"","recordType":"charge","startAddress":null,"startTime":"2024-03-05T15:41:00Z","endTime":"2024-03-07T09:04:12Z"}}#
 //{"messageTypeId":"5","uniqueId":"1711088067494","action":"GetRecord","payload":{"userId":"1","chargeBoxSN":"2100102310200220","recordType":"charge","startTime":"2024-03-01","endTime":"2024-03-31"}}
-            if(timeTaskEn==0)
+            if(timeTaskEn==0 && BluetoothChargeDevice.ChargerType==ChargerTypeValue.Other.value)
             {
               Timer timer = Timer.periodic(const Duration(milliseconds: 100), (timer) async{
 
@@ -161,10 +165,7 @@ class BluetoothWriter {
                   if(BluetoothWriter.receiveUid !="0" && characteristic.device.isConnected)
                   {
                     _logger.debug('重复执行的定时任务！');
-                    String chargeBoxSN = "";
-                    final json = const Utf8Decoder().convert(body.values, 0, body.values.length);
-                    final jsonObject = jsonDecode(json);
-                    chargeBoxSN=jsonObject['payload']['chargeBoxSN'];
+
                     String message = '{"messageTypeId":"6","uniqueId":"${BluetoothWriter.receiveUid}","payload":{"chargeBoxSN":"$chargeBoxSN"}}';
                     await characteristic.write(
                         Int8List.fromList(message.toString().deviceByteArray),
