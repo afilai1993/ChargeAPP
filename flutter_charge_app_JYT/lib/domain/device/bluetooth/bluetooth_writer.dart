@@ -181,6 +181,10 @@ class BluetoothWriter {
                     BluetoothWriter.startHeartBeartEn=2;
                     BluetoothWriter.receiveUid="0";
                   }
+                  else if(!characteristic.device.isConnected)
+                    {
+                      BluetoothChargeDevice.reserveTime="";
+                    }
 
 
                 }

@@ -89,6 +89,18 @@ class _BluetoothNotify {
                   final jsonObject = jsonDecode(json);
                   uid=jsonObject['uniqueId'];
                   BluetoothWriter.receiveUid=uid;
+                  if(jsonData.contains("\"action\":\"SynchroStatus\"")&&jsonData.contains("\"chargeStatus\":\"reserve\""))
+                    {
+                      String startTime=jsonObject['payload']['connectorMain']['startTime'];
+                      String endTime=jsonObject['payload']['connectorMain']['endTime'];
+                      if(startTime!="-"&&endTime!="-")
+                        {
+                          startTime=startTime.replaceAll('T', ' ').substring(0,startTime.length-4);
+                          endTime=endTime.replaceAll('T', ' ').substring(0,endTime.length-4);
+                          BluetoothChargeDevice.reserveTime="$startTime-$endTime";
+                        }
+                    }
+
                 }
 
             }

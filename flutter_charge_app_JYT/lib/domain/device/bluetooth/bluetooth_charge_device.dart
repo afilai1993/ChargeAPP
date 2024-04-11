@@ -33,6 +33,7 @@ class BluetoothChargeDevice implements HardwareChargeDevice {
   //
   // static final _notifyCharacteristicId =
   //     Guid.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+  static String reserveTime="";
   static var serviceId =
   Guid.fromString("0000a002-0000-1000-8000-00805f9b34fb");
 
