@@ -405,8 +405,12 @@ class _Battery extends StatelessWidget {
             ),
           ),
           Container(//充电状态提示文本
-              margin: const EdgeInsets.only(top: 60),
-              child: Text(chargeStatueText))
+              margin: const EdgeInsets.only(top: 65),
+              child: Text(chargeStatueText)),
+          Container(//充电状态提示文本
+              margin: const EdgeInsets.only(top: 35),
+              child: Text("2024-04-11 14:01-2024-04-11 14:02",
+                style: TextStyle(color:Colors.black , fontSize: 9),)),
         ],
       ),
     );
