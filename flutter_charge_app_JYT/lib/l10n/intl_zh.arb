@@ -211,5 +211,6 @@
   "tip_open_location_bluetooth": "请开启定位，以便搜索到附近的蓝牙",
   "total_electric_energy": "总电量",
   "about_app": "关于{appName}",
-  "version": "版本号"
+  "version": "版本号",
+  "Please reinsert and unplug the charging gun": "请重新插拔充电枪",
 }

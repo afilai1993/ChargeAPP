@@ -421,7 +421,7 @@ class _DeviceDataConsumer {
     if (exist) {
       return;
     }
-    await UserDatabase.instance.chargeRecordDao
+    await  UserDatabase.instance.chargeRecordDao
         .insertChargeRecord(ChargeRecordPO()
           ..deviceId = id
           ..deviceAddress = address

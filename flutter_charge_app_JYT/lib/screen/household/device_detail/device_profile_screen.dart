@@ -417,10 +417,11 @@ class _Battery extends StatelessWidget {
   }
 
   String get chargeStatueText {
+    BluetoothWriter.chargeStatus=chargeStatus==null?"-":chargeStatus!;
     if (chargeStatus == null) {
       return "-";
     }
-    return switch (chargeStatus) {
+        return switch (chargeStatus) {
       "idle" => S.current.charge_status_idle,
       "reserve" => S.current.charge_status_reserve,
       "wait" => S.current.charge_status_wait,

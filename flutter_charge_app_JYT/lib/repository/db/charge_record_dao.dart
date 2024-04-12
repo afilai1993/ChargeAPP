@@ -1,3 +1,4 @@
+import 'package:chargestation/design.dart';
 import 'package:chargestation/infrastructure/infrastructure.dart';
 
 import '../data/vo.dart';
@@ -22,19 +23,41 @@ class ChargeRecordDao {
             totalPower: (first["total_power"] as double?) ?? 0);
       });
 
-  Future insertChargeRecord(ChargeRecordPO record) => database.insert(
-          "INSERT OR ABORT INTO `charge_record` (`id`,`device_id`,`device_address`,`connector_id`,`start_time`,`end_time`,`energy`,`prices`,`stop_reason`) VALUES (?,?,?,?,?,?,?,?,?)",
-          [
-            record.id,
-            record.deviceId,
-            record.deviceAddress,
-            record.connectorId,
-            record.startTime,
-            record.endTime,
-            record.energy,
-            record.prices,
-            record.stopReason
-          ]);
+  String timestampToString(int timestamp)
+  {
+    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(dateTime);
+    return formattedDate;
+  }
+
+  Future insertChargeRecord(ChargeRecordPO record)
+  {
+     return database.insert(
+        "INSERT OR ABORT INTO `charge_record` (`id`,`device_id`,`device_address`,`connector_id`,`start_time`,`end_time`,`energy`,`prices`,`stop_reason`) VALUES (?,?,?,?,?,?,?,?,?)",
+        [
+          record.id,
+          record.deviceId,
+          record.deviceAddress,
+          record.connectorId,
+          record.startTime,
+          record.endTime,
+          record.energy,
+          record.prices,
+          record.stopReason
+        ]).then((value) {
+       if(value > 0)
+       {
+         print("成功插入一条充电记录(`id:${record.id}`,"
+              "`device_id:${record.deviceId}`,`device_address:${record.deviceAddress}`,"
+              "`connector_id:${record.connectorId}`,`start_time:${timestampToString(record.startTime)}`,"
+              "`end_time:${timestampToString(record.endTime)}`,`energy:${record.energy}`,"
+              "`prices:${record.prices}`,`stop_reason:${record.stopReason}`)");
+       }
+     });
+
+
+
+  }
 
   Future<List<ChargeRecordPO>> getChargeRecordList(
           int startTime, int endTime, String address, int limit, int offset) =>

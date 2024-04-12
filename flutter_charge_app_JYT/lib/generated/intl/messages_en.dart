@@ -231,6 +231,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pick_in_gallery":
             MessageLookupByLibrary.simpleMessage("Pick in Gallery"),
         "please_login": MessageLookupByLibrary.simpleMessage("Please login"),
+        "Please reinsert and unplug the charging gun": MessageLookupByLibrary.simpleMessage("Please reinsert and unplug the charging gun"),
         "price_asc": MessageLookupByLibrary.simpleMessage("Price Priority"),
         "privacy_policy":
             MessageLookupByLibrary.simpleMessage("Privacy Policy"),

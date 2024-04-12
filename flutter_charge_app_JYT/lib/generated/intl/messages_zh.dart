@@ -186,6 +186,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pick_in_camera": MessageLookupByLibrary.simpleMessage("拍照"),
         "pick_in_gallery": MessageLookupByLibrary.simpleMessage("选择相册"),
         "please_login": MessageLookupByLibrary.simpleMessage("请登录"),
+        "Please reinsert and unplug the charging gun": MessageLookupByLibrary.simpleMessage("请重新插拔充电枪"),
         "price_asc": MessageLookupByLibrary.simpleMessage("价格优先"),
         "privacy_policy": MessageLookupByLibrary.simpleMessage("隐私协议"),
         "profile_current": MessageLookupByLibrary.simpleMessage("电流(A)"),
