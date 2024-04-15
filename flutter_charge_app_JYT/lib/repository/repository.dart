@@ -7,10 +7,8 @@ export 'data/po.dart';
 class RepositoryConfig {
   RepositoryConfig._();
 
-  static const httpHost =
-      //kReleaseMode ? "http://121.43.34.218:8799" : "http://192.168.60.57:8799";
-     // kReleaseMode ? "https://echarge.gpelec.cn:9443" : "http://192.168.60.57:8799";
-     // "https://echarge.gpelec.cn:9443";
- "http://121.43.34.218:8799";
-//"http://192.168.11.31:8799" ;
+
+
+
+  static const httpHost = "http://abchargego.10c-charger.com";
 }

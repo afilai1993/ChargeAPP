@@ -23,8 +23,8 @@ class _LoginScreenState extends State<LoginScreen> with StateAutoDisposeOwner {
   late BoolStateRef loginLoading = BoolStateRef();
   final _formKey = GlobalKey<FormState>();
   final isCheckAgreement = BoolStateRef();
-  static const policyUrl =
-      "https://www.goproled.com/policy/privacyPolicy/index.html";
+
+  static const policyUrl = "http://charge.10c-charger.com/policy/privacyPolicy/index.html";
 
   @override
   void initState() {
